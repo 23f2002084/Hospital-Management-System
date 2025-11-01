@@ -1,0 +1,5 @@
+in cmd 
+
+sqlite3 hospitalmanagement.db
+
+then sqlite3 commands 
