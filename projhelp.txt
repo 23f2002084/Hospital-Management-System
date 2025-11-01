@@ -3,3 +3,12 @@ in cmd
 sqlite3 hospitalmanagement.db
 
 then sqlite3 commands 
+
+
+HOW TO RUN 
+
+1. cd env
+2. cd .\Scripts\
+3. activate
+4. come to root folder
+5. python app.py
