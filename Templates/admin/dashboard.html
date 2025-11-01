@@ -10,8 +10,32 @@
     <section class="main">
         <div class="navbar"></div>
         <div class="view">
-            <h1>Doctor Count : {{doctor}}</h1>
-            <h1>User Count : {{user}}</h1>
+            <div class="welcome">
+                <div class="text">
+                    <h1>Welcome Admin</h1>
+                    <h2>Access and manage all hospital records, including user accounts, appointments, and system<br>configuration. Ensure data integrity for seamless operations.</h2>
+                </div>
+                <img src="{{ url_for('static',filename='images/docbg.jpg')}}" alt="">
+            </div>
+            <div class="boxes">
+                <div class="box" style="background-color: #d7f3fe;">
+                    <h1>{{doctor}}</h1>
+                    <h2>Doctor</h2>
+                    <img src="{{ url_for('static',filename='images/doctor.jpg')}}" alt="">
+                </div>
+                <div class="box">
+                    <h1>{{user}}</h1>
+                    <h2>User</h2>
+                </div>
+                <div class="box">
+                    <h1>{{dept}}</h1>
+                    <h2>Department</h2>
+                </div>
+                <div class="box">
+                    <h1>{{dept}}</h1>
+                    <h2>Appointments</h2>
+                </div>
+            </div>
         </div>
     </section>
 </body>
