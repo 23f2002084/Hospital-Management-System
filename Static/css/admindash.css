@@ -3,3 +3,45 @@
     padding: 0;
 }
 
+@font-face {
+    font-family: sfprom;
+    src: url(../fonts/sf-pro-display/SFPRODISPLAYMEDIUM.OTF);
+}
+
+@font-face {
+    font-family: sfpror;
+    src: url(../fonts/sf-pro-display/SFPRODISPLAYREGULAR.OTF);
+}
+
+@font-face {
+    font-family: sfprob;
+    src: url(../fonts/sf-pro-display/SFPRODISPLAYBOLD.OTF);
+}
+
+@font-face {
+    font-family: sfprobi;
+    src: url(../fonts/sf-pro-display/SFPRODISPLAYBLACKITALIC.OTF);
+}
+
+.main{
+    width: 100%;
+    height: 100vh;
+    background-color: #101010;
+    display: flex;
+    align-items: center;
+}
+
+.navbar{
+    width: 200px;
+    height: 100vh;
+    background-color: #101010;
+    position: fixed;
+}
+
+.view{
+    width: calc(99% - 200px);
+    height: 95vh;
+    background-color: #202021;
+    border-radius: 20px;
+    margin-left: 200px;
+}
