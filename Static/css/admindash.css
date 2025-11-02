@@ -3,6 +3,10 @@
     padding: 0;
 }
 
+*::-webkit-scrollbar{
+    width: 0;
+}
+
 @font-face {
     font-family: sfprom;
     src: url(../fonts/sf-pro-display/SFPRODISPLAYMEDIUM.OTF);
@@ -25,7 +29,7 @@
 
 .main{
     width: 100%;
-    height: 100vh;
+    min-height: 100vh;
     background-color: #101010;
     display: flex;
     align-items: center;
@@ -38,23 +42,32 @@
     position: fixed;
 }
 
+.navbar h1{
+    color: white;
+}
+
 .view{
     width: calc(99% - 200px);
-    height: 95vh;
+    margin-top: 20px;
+    margin-bottom: 20px;
     background-color: #202021;
     border-radius: 20px;
     margin-left: 200px;
-    overflow: hidden;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    scrollbar-width: none;
     display: flex;
+    align-items: center;
     flex-direction: column;
 }
 
 .welcome{
-    width: 100%;
+    width: 99%;
+    margin-top: 5px;
     height: 200px;
     overflow: hidden;
     background-color: #5672c2;
-    border-radius: 20px;
+    border-radius: 15px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -62,7 +75,6 @@
 
 .text{
     width: 700px;
-    padding-left: 30px;
 }
 
 .welcome img{
@@ -70,9 +82,10 @@
     padding-right:30px ;
 }
 
-.welcome h1, h2{
+.welcome h1{
     color: white;
     font-family: 'sfprob';
+    padding-left: 30px;
 }
 
 .welcome h2{
@@ -80,28 +93,28 @@
     color: rgb(211, 211, 211);
     font-size: 15px;
     padding-top: 10px;
+    padding-left: 30px;
 }
 
 .boxes{
-    width: 100%;
-    height: calc(100vh - 200px);
+    width: 99%;
     display: flex;
     justify-content: space-between;
-    margin-top: 10px;
+    margin-top: 25px;
 }
 
 .boxes h1,h2{
     color: white;
     font-family: 'sfpror';
-    padding: 10px;
+    padding: 20px;
     z-index: 99999;
 }
 
 .box{
-    width: 270px;
+    width: 265px;
     height: 180px;
-    border: 1px solid #101010;
-    border-radius: 20px;
+    background-color: #f55a00;
+    border-radius: 15px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -111,6 +124,22 @@
 
 .box img{
     position: absolute;
-    width: 80%;
-    padding-left: 80px;
+    width: 100%;
+    height: 100%;
+}
+
+.appointments{
+    width: 99%;
+    height: 300px;
+    background-color: #f55a00;
+    margin-top: 25px;
+    border-radius: 15px;
+    margin-bottom: 5px;
+}
+
+.appointments h1{
+    color: white;
+    font-family: 'sfprob';
+    padding-left: 20px;
+    padding-top: 20px;
 }

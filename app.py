@@ -14,14 +14,16 @@ def count():
     usercount=cur.fetchone()[0]
     cur.execute('SELECT COUNT(*)FROM DEPARTMENT')
     deptcount=cur.fetchone()[0]
+    cur.execute('SELECT COUNT(*)FROM PATIENTS')
+    patcount=cur.fetchone()[0]
     con.close()
-    return doccount, usercount, deptcount
+    return doccount, usercount, deptcount, patcount
 
 @app.route('/')
 
 def home():
-    doctor,user,dept=count()
-    return render_template("admin/dashboard.html",doctor=doctor,user=user,dept=dept)
+    doctor,user,dept,pat=count()
+    return render_template("admin/dashboard.html",doctor=doctor,user=user,dept=dept,pat=pat)
 
 
 if __name__ == "__main__":
