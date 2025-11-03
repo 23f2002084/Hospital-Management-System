@@ -1,9 +1,12 @@
-in cmd 
+for creating an env (first time) :
 
-sqlite3 hospitalmanagement.db
-
-then sqlite3 commands 
-
+1. pip install virtualenv
+2. virtualenv <name of your env>
+3. cd env
+4. cd .\Scripts\
+5. activate
+6. come to root folder
+7. python app.py
 
 HOW TO RUN 
 
@@ -12,3 +15,10 @@ HOW TO RUN
 3. activate
 4. come to root folder
 5. python app.py
+
+
+for db in cmd:
+
+1. sqlite3 hospitalmanagement.db
+2. then sqlite3 commands 
+
