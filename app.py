@@ -16,14 +16,26 @@ def count():
     deptcount=cur.fetchone()[0]
     cur.execute('SELECT COUNT(*)FROM PATIENTS')
     patcount=cur.fetchone()[0]
+    cur.execute("SELECT COUNT(*)FROM APPOINTMENTS WHERE STATUS='Booked'")
+    appcount=cur.fetchone()[0]
     con.close()
-    return doccount, usercount, deptcount, patcount
+    return doccount, usercount, deptcount, patcount,appcount
+
+def tabledata():
+    con=sqlite3.connect(database)
+    cur=con.cursor()
+    cur.execute("SELECT APPOINTMENT_ID,PATIENT_NAME,DOC_NAME,APPOINTMENT_DATE,APPOINTMENT_TIME FROM APPOINTMENTS WHERE STATUS='Booked'")
+    tab=cur.fetchall()
+    con.close()
+    return tab
+
 
 @app.route('/')
 
 def home():
-    doctor,user,dept,pat=count()
-    return render_template("admin/dashboard.html",doctor=doctor,user=user,dept=dept,pat=pat)
+    doctor,user,dept,pat,app=count()
+    tab=tabledata()
+    return render_template("admin/dashboard.html",doctor=doctor,user=user,dept=dept,pat=pat,app=app,tab=tab)
 
 
 if __name__ == "__main__":

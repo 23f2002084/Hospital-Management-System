@@ -36,13 +36,33 @@
                     <img src="{{ url_for('static',filename='images/dept.png')}}" alt="">
                 </div>
                 <div class="box">
-                    <h1>{{dept}}</h1>
+                    <h1>{{app}}</h1>
                     <h2>Appointments</h2>
                     <img src="{{ url_for('static',filename='images/appointment.png')}}" alt="">
                 </div>
             </div>
             <div class="appointments">
                 <h1>Upcoming Appointments</h1>
+                <table>
+                    <tr>
+                        <th>Appointment ID</th>
+                        <th>Patient Name</th>
+                        <th>Doctor Name</th>
+                        <th>Appointment Date</th>
+                        <th>Appointment Time</th>
+                        <th>Status</th>
+                    </tr>
+                    {% for i in tab%}
+                    <tr>
+                        <td>{{i[0]}}</td>
+                        <td>{{i[1]}}</td>
+                        <td>{{i[2]}}</td>
+                        <td>{{i[3]}}</td>
+                        <td>{{i[4]}}</td>
+                        <td>Booked</td>
+                    </tr>
+                    {% endfor %}
+                </table>
             </div>
         </div>
     </section>
