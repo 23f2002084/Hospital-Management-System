@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect, url_for
 import os
 import sqlite3
 
@@ -38,8 +38,23 @@ def signin():
 def register():
     uname=request.form['uname']
     email=request.form['email']
-    
+    pwd=request.form['pwd']
+    pnum=request.form['pnum']
+    dob=request.form['dob']
+    gender=request.form['Gender']
+    role=request.form['Role']
+    con=sqlite3.connect(database)
+    cur=con.cursor()
+    cur.execute(
+        '''INSERT INTO USERS(NAME,EMAIL,PASSWORD,GENDER,PHONE_NUMBER,DOB,ROLE)
+           VALUES(?,?,?,?,?,?,?);''',
+           (uname,email,pwd,pnum,dob,gender,role)
+    )
+    con.commit()
+    con.close()
+    return redirect(url_for('signin'))
 
+@app.route('/home')
 def home():
     doctor,user,dept,pat,app=count()
     tab=tabledata()

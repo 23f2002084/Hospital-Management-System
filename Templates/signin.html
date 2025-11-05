@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="{{ url_for('Static', filename='css/sign.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sign.css') }}">
     <link rel="stylesheet" href="../static/css/sign.css">
 </head>
 <body>
@@ -38,14 +38,15 @@
                     <div class="field">
                         <div class="choose">
                             <label for="Gender">Gender</label>
-                                <select>
+                                <select name="Gender" required>
                                     <option value="" selected hidden>Gender</option>
                                     <option value="M">Male</option>
                                     <option value="F">Female</option>
                                     required
                                 </select>
                                 <label for="ROle">Role</label>
-                                <select>
+                                <select name="Role" requiredwerkzeug.exceptions.BadRequestKeyError: 400 Bad Request: The browser (or proxy) sent a request that this server could not understand.
+KeyError: 'gender'>
                                     <option value="" selected hidden>Role</option>
                                     <option value="Doctor">Doctor</option>
                                     <option value="Patient">Patient</option>
