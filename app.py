@@ -31,6 +31,14 @@ def tabledata():
 
 
 @app.route('/')
+def signin():
+    return render_template("signin.html")
+
+@app.route('/register', methods=['post'])
+def register():
+    uname=request.form['uname']
+    email=request.form['email']
+    
 
 def home():
     doctor,user,dept,pat,app=count()

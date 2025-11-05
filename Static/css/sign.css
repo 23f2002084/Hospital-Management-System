@@ -1,0 +1,113 @@
+*{
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+*::-webkit-scrollbar{
+    width: 0;
+}
+
+@font-face {
+    font-family: sfprom;
+    src: url(../fonts/sf-pro-display/SFPRODISPLAYMEDIUM.OTF);
+}
+
+@font-face {
+    font-family: sfpror;
+    src: url(../fonts/sf-pro-display/SFPRODISPLAYREGULAR.OTF);
+}
+
+@font-face {
+    font-family: sfprob;
+    src: url(../fonts/sf-pro-display/SFPRODISPLAYBOLD.OTF);
+}
+
+@font-face {
+    font-family: sfprobi;
+    src: url(../fonts/sf-pro-display/SFPRODISPLAYBLACKITALIC.OTF);
+}
+
+.main{
+    width: 100%;
+    height: 100vh;
+    background-color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.centerdiv{
+    width: 80%;
+    height: 90vh;
+    background-color: orange;
+    display: flex;
+    border-radius: 20px;
+    background-color: #101010;
+}
+
+.divi{
+    width: 50%;
+    margin: 5px;
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+form{
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'sfpror';
+}
+
+.field{
+    width: 85%;
+    padding-bottom: 10px;
+}
+
+form input{
+    height: 35px;
+    width: 95%;
+    border-radius: 20px;
+    border: none;
+    padding-left: 10px;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    background-color: #101010;
+    border: 1px solid rgb(61, 61, 61);
+}
+
+.choose{
+    width: 98%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 15px;
+}
+
+select{
+    height: 35px;
+    width: 100px;
+    padding: 2px;
+    background-color: #101010;
+    color: grey;
+    border-radius: 20px;
+}
+
+button{
+    width: 90px;
+    height: 30px;
+    border-radius: 20px;
+    margin-top: 20px;
+    border: none;
+    background-color: #5672c2;
+    color: white;
+    cursor: pointer;
+
+}
