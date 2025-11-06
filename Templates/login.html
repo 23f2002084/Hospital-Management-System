@@ -3,9 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Log in</title>
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sign.css') }}">
+    <link rel="stylesheet" href="../static/css/sign.css">
 </head>
 <body>
-    
+    <section class="main">
+        <div class="centerdiv">
+            <div class="divi" style="background-color: blue;">
+
+            </div>
+            <div class="divi">
+                <form action="/login" method="post">
+                    <div class="field">
+                        <label for="email">Email ID</label>
+                        <input type="email" name="email" id="email" required placeholder="Enter Your Email ID">
+                    </div>
+                    <div class="field">
+                        <label for="pwd">Password</label>
+                        <input type="password" name="pwd" id="pwd" required placeholder="Enter Your Password">
+                    </div>
+                    <div class="field">
+                        <div class="choose">
+                            <label for="ROle">Role</label>
+                            <select name="Role" required>
+                                <option value="" selected hidden>Role</option>
+                                <option value="Doctor">Doctor</option>
+                                <option value="Patient">Patient</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+            {% if error %}
+            <p style="color:red">{{error}}</p>
+            {% endif %}
+        </div>
+    </section>
 </body>
 </html>

@@ -31,6 +31,10 @@ def tabledata():
 
 
 @app.route('/')
+def index():
+    return render_template("index.html")
+
+@app.route('/signin')
 def signin():
     return render_template("signin.html")
 
@@ -48,11 +52,30 @@ def register():
     cur.execute(
         '''INSERT INTO USERS(NAME,EMAIL,PASSWORD,GENDER,PHONE_NUMBER,DOB,ROLE)
            VALUES(?,?,?,?,?,?,?);''',
-           (uname,email,pwd,pnum,dob,gender,role)
+           (uname,email,pwd,gender,pnum,dob,role)
     )
     con.commit()
     con.close()
-    return redirect(url_for('signin'))
+    return redirect(url_for('index'))
+
+@app.route('/login', methods=['post','get'])
+def login():
+    if request.method == 'post':
+        email=request.form['email']
+        pwd=request.form['pwd']
+        role=request.form['Role']
+        con=sqlite3.connect(database)
+        cur=con.cursor()
+        cur.execute(
+            'SELECT * FROM USERS WHERE EMAIL=? AND PASSWORD=?',(email,pwd)
+        )
+        res=cur.fetchone()
+        con.close()
+
+
+    return render_template('login.html')
+
+
 
 @app.route('/home')
 def home():
