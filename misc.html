@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Activity Log</title>
+<style>
+  body {
+    font-family: "Poppins", sans-serif;
+    background-color: #f8f9fa;
+    color: #222;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    height: 100vh;
+    margin: 0;
+    padding-top: 50px;
+  }
+
+  .activity-container {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 4px 25px rgba(0,0,0,0.08);
+    width: 450px;
+    padding: 25px 30px;
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .header h2 {
+    font-size: 20px;
+    margin: 0;
+    font-weight: 600;
+  }
+
+  .header span {
+    color: #666;
+    font-size: 14px;
+  }
+
+  .activity-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #eee;
+    padding: 18px 0;
+  }
+
+  .activity-item:first-of-type {
+    border-top: none;
+  }
+
+  .left {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .left h4 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .left span {
+    font-size: 13px;
+    color: #777;
+  }
+
+  .middle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+  }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    background-color: #24b47e;
+    border-radius: 50%;
+  }
+
+  .right {
+    text-align: right;
+  }
+
+  .right h4 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .right span {
+    font-size: 13px;
+    color: #777;
+  }
+
+  /* Optional hover effect */
+  .activity-item:hover {
+    background-color: #fafafa;
+    border-radius: 8px;
+    transition: 0.3s;
+  }
+</style>
+</head>
+<body>
+
+  <div class="activity-container">
+    <div class="header">
+      <div>
+        <h2>Activity Log</h2>
+        <span>All recent charges, transfers, and recurring payments.</span>
+      </div>
+      <a href="#" style="font-size:14px; text-decoration:none; color:#6c63ff;">See all</a>
+    </div>
+
+    <div class="activity-item">
+      <div class="left">
+        <h4>Doctor Visit</h4>
+        <span>General check-up</span>
+      </div>
+      <div class="middle">
+        <span class="status-dot"></span>
+        <span>Completed</span>
+      </div>
+      <div class="right">
+        <h4>$144</h4>
+        <span>Paypal</span>
+      </div>
+    </div>
+
+    <div class="activity-item">
+      <div class="left">
+        <h4>Subscription Renewal</h4>
+        <span>Music service auto-renewal</span>
+      </div>
+      <div class="middle">
+        <span class="status-dot"></span>
+        <span>Completed</span>
+      </div>
+      <div class="right">
+        <h4>$192</h4>
+        <span>Rupay</span>
+      </div>
+    </div>
+
+    <div class="activity-item">
+      <div class="left">
+        <h4>Online Purchase</h4>
+        <span>Electronics - Headphones</span>
+      </div>
+      <div class="middle">
+        <span class="status-dot"></span>
+        <span>Completed</span>
+      </div>
+      <div class="right">
+        <h4>$89</h4>
+        <span>Mastercard</span>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

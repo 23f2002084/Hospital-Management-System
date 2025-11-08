@@ -22,6 +22,14 @@ def count():
     con.close()
     return doccount, usercount, deptcount, patcount,appcount
 
+def admintabledata():
+    con=sqlite3.connect(database)
+    cur=con.cursor()
+    cur.execute("SELECT APPOINTMENT_ID,PATIENT_NAME,DOC_NAME,APPOINTMENT_DATE,APPOINTMENT_TIME FROM APPOINTMENTS WHERE STATUS='Booked'")
+    tab=cur.fetchall()
+    con.close()
+    return tab
+
 def tabledata(drname=None):
     con=sqlite3.connect(database)
     cur=con.cursor()
@@ -87,7 +95,7 @@ def login():
 @app.route('/admin_dashboard')
 def admin_dashboard():
     doctor,user,dept,pat,app=count()
-    tab=tabledata()
+    tab=admintabledata()
     return render_template("admin/dashboard.html",doctor=doctor,user=user,dept=dept,pat=pat,app=app,tab=tab)
 
 @app.route('/patient_dashboard')

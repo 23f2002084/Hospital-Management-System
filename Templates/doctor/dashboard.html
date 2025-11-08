@@ -21,27 +21,49 @@
                 <img src="{{ url_for('static',filename='images/docbg.jpg')}}" alt="">
             </div>
             <div class="appointments">
-                <h1>Upcoming Appointments</h1>
-                <table>
-                    <tr>
-                        <th>Appointment ID</th>
-                        <th>Patient Name</th>
-                        <th>Patient History</th>
-                        <th>Actions</th>
-                    </tr>
-                    {% for i in tab%}
-                    <tr>
-                        <td>{{i[0]}}</td>
-                        <td>{{i[1]}}</td>
-                    </tr>
-                    {% endfor %}
-                </table>
+                <h1 id="hmm">Upcoming Appointments</h1>
+                <div class="titlee">
+                    <div class="app">
+                        <h1>Appointment ID</h1>
+                    </div>
+                    <div class="patient">
+                        <h1>Patient Name</h1>
+                    </div>
+                    <div class="stat">
+                        <h1>Status</h1>
+                    </div>
+                </div>
+                {% for i in tab%}
+                <div class="title">
+                    <div class="app">
+                        <h1>{{i[0]}}</h1>
+                    </div>
+                    <div class="patient">
+                        <h1>{{i[1]}}</h1>
+                    </div>
+                    <div class="stat">
+                        <button>Mark As Complete</button>
+                        <button>Cancel</button>
+                    </div>
+                </div>
+                {% endfor %}
             </div>
             <div class="appointments" style="display: flex; justify-content: space-between; background:none;">
-                <div class="appointments" style="width: 48.5%; background-color: blueviolet; margin-top: 0px; margin-bottom: 0px;">
+                <div class="appointments" style="width: 49.70%; background-color: blueviolet; margin-top: 0px; margin-bottom: 0px;">
                     <h1>Assigned Patients</h1>
+                    <table>
+                        <tr>
+                            <th>Patient Name</th>
+                            <th>View</th>
+                        </tr>
+                        {% for i in tab%}
+                        <tr>
+                            <td>{{i[1]}}</td>
+                        </tr>
+                        {% endfor %}
+                </table>
                 </div>
-                <div class="appointments" style="width: 48.5%; background-color: olivedrab; margin-top: 0px; margin-bottom: 0px;">
+                <div class="appointments" style="width: 49.70%; background-color: #101010; margin-top: 0px; margin-bottom: 0px;">
                     <h1>Availability</h1>
                 </div>
             </div>
