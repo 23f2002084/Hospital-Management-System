@@ -29,7 +29,6 @@ def tabledata():
     con.close()
     return tab
 
-
 @app.route('/')
 def index():
     return render_template("index.html")
@@ -38,7 +37,7 @@ def index():
 def signin():
     return render_template("signin.html")
 
-@app.route('/register', methods=['post'])
+@app.route('/register', methods=['POST'])
 def register():
     uname=request.form['uname']
     email=request.form['email']
@@ -58,9 +57,9 @@ def register():
     con.close()
     return redirect(url_for('index'))
 
-@app.route('/login', methods=['post','get'])
+@app.route('/login', methods=['POST','GET'])
 def login():
-    if request.method == 'post':
+    if request.method == 'POST':
         email=request.form['email']
         pwd=request.form['pwd']
         role=request.form['Role']
@@ -71,14 +70,20 @@ def login():
         )
         res=cur.fetchone()
         con.close()
-
-
+        if res:
+            if role=="Doctor":
+                return redirect(url_for('doctor_dashboard'))
+            elif role=="Patient":
+                return redirect(url_for('patient_dashboard'))
+            elif role.lower()=="admin":
+                return redirect(url_for('admin_dashboard'))
+        else:
+            return "Invalid Login Credentials"
     return render_template('login.html')
 
 
-
-@app.route('/home')
-def home():
+@app.route('/admin_dashboard')
+def admin_dashboard():
     doctor,user,dept,pat,app=count()
     tab=tabledata()
     return render_template("admin/dashboard.html",doctor=doctor,user=user,dept=dept,pat=pat,app=app,tab=tab)
