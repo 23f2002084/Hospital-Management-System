@@ -1,8 +1,9 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
 import os
 import sqlite3
 
 app = Flask(__name__, instance_relative_config = True)
+app.secret_key="Narendran20$"
 database=os.path.join(app.instance_path, "hospitalmanagement.db")
 
 def count():
@@ -21,10 +22,10 @@ def count():
     con.close()
     return doccount, usercount, deptcount, patcount,appcount
 
-def tabledata():
+def tabledata(drname=None):
     con=sqlite3.connect(database)
     cur=con.cursor()
-    cur.execute("SELECT APPOINTMENT_ID,PATIENT_NAME,DOC_NAME,APPOINTMENT_DATE,APPOINTMENT_TIME FROM APPOINTMENTS WHERE STATUS='Booked'")
+    cur.execute("SELECT APPOINTMENT_ID,PATIENT_NAME,DOC_NAME,APPOINTMENT_DATE,APPOINTMENT_TIME FROM APPOINTMENTS WHERE STATUS='Booked' AND DOC_NAME=?",(drname,))
     tab=cur.fetchall()
     con.close()
     return tab
@@ -71,6 +72,7 @@ def login():
         res=cur.fetchone()
         con.close()
         if res:
+            session['username']=res[1]
             if role=="Doctor":
                 return redirect(url_for('doctor_dashboard'))
             elif role=="Patient":
@@ -88,6 +90,16 @@ def admin_dashboard():
     tab=tabledata()
     return render_template("admin/dashboard.html",doctor=doctor,user=user,dept=dept,pat=pat,app=app,tab=tab)
 
+@app.route('/patient_dashboard')
+def patient_dashboard():
+    return render_template("patient/dashboard.html")
+
+@app.route('/doctor_dashboard')
+def doctor_dashboard():
+    if 'username' in session:
+        drname=session['username']
+    tab=tabledata(drname)
+    return render_template("doctor/dashboard.html",drname=drname,tab=tab)
 
 if __name__ == "__main__":
     app.run(debug=True)

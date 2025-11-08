@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admindash.css') }}">
+</head>
+<body>
+    <section class="main">
+        <div class="navbar">
+            <h1>Hello</h1>
+            <a href="/">Logout</a>
+        </div>
+        <div class="view">
+            <div class="welcome">
+                <div class="text">
+                    <h1>Welcome Dr. {{drname}}</h1>
+                    <h2>Access and manage patient records, view appointments, and update medical reports.<br>Provide timely care and maintain accurate clinical information.</h2>
+                </div>
+                <img src="{{ url_for('static',filename='images/docbg.jpg')}}" alt="">
+            </div>
+            <div class="appointments">
+                <h1>Upcoming Appointments</h1>
+                <table>
+                    <tr>
+                        <th>Appointment ID</th>
+                        <th>Patient Name</th>
+                        <th>Patient History</th>
+                        <th>Actions</th>
+                    </tr>
+                    {% for i in tab%}
+                    <tr>
+                        <td>{{i[0]}}</td>
+                        <td>{{i[1]}}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <div class="appointments" style="display: flex; justify-content: space-between; background:none;">
+                <div class="appointments" style="width: 48.5%; background-color: blueviolet; margin-top: 0px; margin-bottom: 0px;">
+                    <h1>Assigned Patients</h1>
+                </div>
+                <div class="appointments" style="width: 48.5%; background-color: olivedrab; margin-top: 0px; margin-bottom: 0px;">
+                    <h1>Availability</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
