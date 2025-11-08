@@ -42,9 +42,26 @@
     position: fixed;
 }
 
-.navbar h1{
+.navbar h1,
+a{
     color: white;
+    font-family: 'sfpror';
+    font-size: 20px;
+    text-decoration: none;
 }
+
+.icon{
+    display: flex;
+    align-items: center;
+    margin-top: 40px;
+    gap: 1em;
+    padding-left: 20px;
+}
+
+.icon img{
+    width: 20px;
+}
+
 
 .view{
     width: calc(99% - 200px);
@@ -142,6 +159,16 @@
     align-items: center;
 }
 
+.appointmentss{
+    width: 99%;
+    min-height: 300px;
+    background-color: #f55a00;
+    margin-top: 25px;
+    border-radius: 15px;
+    margin-bottom: 5px;
+    display: flex;
+}
+
 #hmm{
     color: white;
     font-family: 'sfprob';
@@ -196,3 +223,11 @@
     transition: ease-in-out;
 }
 
+button{
+    width: 150px;
+    height: 50px;
+    cursor: pointer;
+    border-radius: 20px;
+    border: none;
+    font-family: 'sfpror';
+}
