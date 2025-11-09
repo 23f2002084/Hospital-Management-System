@@ -9,8 +9,26 @@
 <body>
     <section class="main">
         <div class="navbar">
-            <h1>Hello</h1>
-            <a href="/">Logout</a>
+            <div class="icon">
+                <img src="{{ url_for('static',filename='icons/home.svg')}}" alt="">
+                <h1>Home</h1>
+            </div>
+            <div class="icon">
+                <img src="{{ url_for('static',filename='icons/doc.svg')}}" alt="">
+                <h1>Doctors</h1>
+            </div>
+            <div class="icon">
+                <img src="{{ url_for('static',filename='icons/patient.svg')}}" alt="">
+                <h1>Patients</h1>
+            </div>
+            <div class="icon">
+                <img src="{{ url_for('static',filename='icons/app.svg')}}" alt="">
+                <h1>Appointments</h1>
+            </div>
+            <div class="icon">
+                <img src="{{ url_for('static',filename='icons/logout.svg')}}" alt="">
+                <a href="/">Logout</a>
+            </div>
         </div>
         <div class="view">
             <div class="welcome">
