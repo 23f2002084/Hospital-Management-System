@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>Admin-Dashboard</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/admindash.css') }}">
 </head>
 <body>
@@ -11,15 +11,15 @@
         <div class="navbar">
             <div class="icon">
                 <img src="{{ url_for('static',filename='icons/home.svg')}}" alt="">
-                <a href="">Home</a>
+                <a href="/admin_dashboard">Home</a>
             </div>
             <div class="icon">
                 <img src="{{ url_for('static',filename='icons/doc.svg')}}" alt="">
-                <a href="">Doctors</a>
+                <a href="/doctor_list">Doctors</a>
             </div>
             <div class="icon">
                 <img src="{{ url_for('static',filename='icons/patient.svg')}}" alt="">
-                <a href="">Patients</a>
+                <a href="/patient_list">Patients</a>
             </div>
             <div class="icon">
                 <img src="{{ url_for('static',filename='icons/app.svg')}}" alt="">

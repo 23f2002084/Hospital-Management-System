@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin-Patients</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admindash.css') }}">
+</head>
+<body>
+    <section class="main">
+        <div class="navbar" style="padding-top: 250px;">
+            <div class="icon">
+                <img src="{{ url_for('static',filename='icons/home.svg')}}" alt="">
+                <a href="/admin_dashboard">Home</a>
+            </div>
+            <div class="icon">
+                <img src="{{ url_for('static',filename='icons/doc.svg')}}" alt="">
+                <a href="/doctor_list">Doctors</a>
+            </div>
+            <div class="icon">
+                <img src="{{ url_for('static',filename='icons/patient.svg')}}" alt="">
+                <a href="">Patients</a>
+            </div>
+            <div class="icon">
+                <img src="{{ url_for('static',filename='icons/app.svg')}}" alt="">
+                <a href="">Appointments</a>
+            </div>
+            <div class="icon">
+                <img src="{{ url_for('static',filename='icons/logout.svg')}}" alt="">
+                <a href="/">Logout</a>
+            </div>
+        </div>
+        <div class="view">
+            <div class="appointments">
+                <h1 id="hmm">Patient List</h1>
+                <div class="titlee">
+                    <div class="app">
+                        <h1>Patient ID</h1>
+                    </div>
+                    <div class="patient">
+                        <h1>Patient Name</h1>
+                    </div>
+                    <div class="doc">
+                        <h1>Actions</h1>
+                    </div>
+                </div>
+                {% for i in patienttab%}
+                <div class="title">
+                    <div class="app">
+                        <h1>{{i[0]}}</h1>
+                    </div>
+                    <div class="patient">
+                        <h1>{{i[1]}}</h1>
+                    </div>
+                    <div class="stat" style="display: flex; justify-content: space-evenly; align-items: center; ">
+                        <button style="background-color: rgb(0, 255, 55);">Edit</button>
+                        <button style="background-color: rgb(255, 0, 0);">Blacklist</button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+</body>
+</html>

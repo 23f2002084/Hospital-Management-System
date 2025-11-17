@@ -38,6 +38,22 @@ def tabledata(drname=None):
     con.close()
     return tab
 
+def patientlist():
+    con=sqlite3.connect(database)
+    cur=con.cursor()
+    cur.execute("SELECT PATIENT_ID,PATIENT_NAME FROM PATIENTS")
+    patienttab=cur.fetchall()
+    con.close()
+    return patienttab
+
+def doctorlist():
+    con=sqlite3.connect(database)
+    cur=con.cursor()
+    cur.execute("SELECT DOC_ID,DEPT_ID,NAME,SPECIALIZATION FROM DOCTORS")
+    doctab=cur.fetchall()
+    con.close()
+    return doctab
+
 @app.route('/')
 def index():
     return render_template("index.html")
@@ -108,6 +124,16 @@ def doctor_dashboard():
         drname=session['username']
     tab=tabledata(drname)
     return render_template("doctor/dashboard.html",drname=drname,tab=tab)
+
+@app.route('/patient_list')
+def patient_list():
+    patienttab=patientlist()
+    return render_template("admin/patient.html",patienttab=patienttab)
+
+@app.route('/doctor_list')
+def doctor_list():
+    doctab=doctorlist()
+    return render_template("admin/doctor.html",doctab=doctab)
 
 if __name__ == "__main__":
     app.run(debug=True)
