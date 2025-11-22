@@ -127,13 +127,70 @@ def doctor_dashboard():
 
 @app.route('/patient_list')
 def patient_list():
-    patienttab=patientlist()
-    return render_template("admin/patient.html",patienttab=patienttab)
+    name = request.args.get('name', '').strip()
+    con=sqlite3.connect(database)
+    cur=con.cursor()
+    if name:
+        cur.execute("SELECT PATIENT_ID,PATIENT_NAME FROM PATIENTS WHERE PATIENT_NAME LIKE ?", ('%'+name+'%',))
+    else:
+        cur.execute("SELECT PATIENT_ID,PATIENT_NAME FROM PATIENTS")
+    patienttab = cur.fetchall()
+    con.close()
+    return render_template("admin/patient.html",patienttab=patienttab, search=name)
 
 @app.route('/doctor_list')
 def doctor_list():
-    doctab=doctorlist()
-    return render_template("admin/doctor.html",doctab=doctab)
+    name = request.args.get('name', '').strip()
+    con=sqlite3.connect(database)
+    cur=con.cursor()
+    if name:
+        cur.execute("SELECT DOC_ID,DEPT_ID,NAME,SPECIALIZATION FROM DOCTORS WHERE NAME LIKE ?", ('%'+name+'%',))
+    else:
+        cur.execute("SELECT DOC_ID,DEPT_ID,NAME,SPECIALIZATION FROM DOCTORS")
+    doctab = cur.fetchall()
+    con.close()
+    return render_template("admin/doctor.html",doctab=doctab, search=name)
+
+@app.route('/appointment_list')
+def appointment_list():
+    name = request.args.get('name', '').strip()
+    con=sqlite3.connect(database)
+    cur=con.cursor()
+    if name:
+        cur.execute("SELECT APPOINTMENT_ID,PATIENT_NAME,DOC_NAME,APPOINTMENT_DATE,APPOINTMENT_TIME FROM APPOINTMENTS WHERE PATIENT_NAME LIKE ?", ('%'+name+'%',))
+    else:
+        cur.execute("SELECT APPOINTMENT_ID,PATIENT_NAME,DOC_NAME,APPOINTMENT_DATE,APPOINTMENT_TIME FROM APPOINTMENTS")
+    apptab = cur.fetchall()
+    con.close()
+    return render_template("admin/appointments.html",apptab=apptab, search=name)
+
+
+@app.route('/add_doctor', methods=['GET', 'POST'])
+def add_doctor():
+    if request.method == 'POST':
+        dept_id = request.form.get('dept_id')
+        name = request.form.get('name')
+        specialization = request.form.get('specialization')
+        con = sqlite3.connect(database)
+        cur = con.cursor()
+        cur.execute("INSERT INTO DOCTORS (DEPT_ID, NAME, SPECIALIZATION) VALUES (?, ?, ?)", (dept_id, name, specialization))
+        con.commit()
+        con.close()
+        return redirect(url_for('doctor_list'))
+    return render_template('admin/add_doctor.html')
+
+
+@app.route('/add_patient', methods=['GET', 'POST'])
+def add_patient():
+    if request.method == 'POST':
+        patient_name = request.form.get('patient_name')
+        con = sqlite3.connect(database)
+        cur = con.cursor()
+        cur.execute("INSERT INTO PATIENTS (PATIENT_NAME) VALUES (?)", (patient_name,))
+        con.commit()
+        con.close()
+        return redirect(url_for('patient_list'))
+    return render_template('admin/add_patient.html')
 
 if __name__ == "__main__":
     app.run(debug=True)

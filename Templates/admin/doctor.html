@@ -32,7 +32,19 @@
         </div>
         <div class="view" style="height: 96vh;">
             <div class="appointments">
-                <h1 id="hmm">Patient List</h1>
+                <h1 id="hmm">Doctors List</h1>
+                    <div style="display:flex; gap:12px; align-items:center;">
+                        <form class="searchbar" method="get" action="{{ url_for('doctor_list') }}" style="display:flex; gap:8px; align-items:center;">
+                            <input type="search" name="name" placeholder="Search by name" value="{{ search|default('') }}" />
+                            <button type="submit" style="padding:6px 10px;">Search</button>
+                            {% if search %}
+                                <a href="{{ url_for('doctor_list') }}" style="margin-left:8px; text-decoration:none; color:#333;">Clear</a>
+                            {% endif %}
+                        </form>
+                        <a href="{{ url_for('add_doctor') }}" style="text-decoration:none;">
+                            <button class="add" type="button">Add Doctor</button>
+                        </a>
+                    </div>
                 <div class="titlee">
                     <div class="app">
                         <h1>Doctor ID</h1>
@@ -65,8 +77,8 @@
                         <h1>{{i[3]}}</h1>
                     </div>
                     <div class="stat" style="display: flex; justify-content: space-evenly; align-items: center; ">
-                        <button style="background-color: rgb(0, 255, 55);">Edit</button>
-                        <button style="background-color: rgb(255, 0, 0);">Blacklist</button>
+                        <button style="background-color: rgb(255, 255, 255);">Edit</button>
+                        <button style="background-color: rgb(255, 255, 255);">Blacklist</button>
                     </div>
                 </div>
                 {% endfor %}

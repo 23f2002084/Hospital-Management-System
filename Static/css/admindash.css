@@ -233,3 +233,36 @@ button{
     border: none;
     font-family: 'sfpror';
 }
+
+.searchbar{
+    height: 50px;
+    width: 500px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.searchbar input{
+    width: 500px;
+    height: 40px;
+    background-color: #202021;
+    border-radius: 10px;
+    border: none;
+    padding-left: 15px;
+    color: white;
+}
+
+.searchbar button{
+    background-color: #5672c2;
+    height: 40px;
+    color: white;
+}
+
+.add{
+    background-color: #37d84c;
+    height: 40px;
+    color: white;
+
+}

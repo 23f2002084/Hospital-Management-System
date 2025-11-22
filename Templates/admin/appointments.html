@@ -32,31 +32,35 @@
         </div>
         <div class="view">
             <div class="appointments">
-                <h1 id="hmm">Patient List</h1>
-                <div style="display:flex; gap:12px; align-items:center;">
-                    <form class="searchbar" method="get" action="{{ url_for('patient_list') }}" style="display:flex; gap:8px; align-items:center;">
-                        <input type="search" name="name" placeholder="Search by name" value="{{ search|default('') }}"/>
-                        <button type="submit" style="padding:6px 10px;">Search</button>
-                        {% if search %}
-                            <a href="{{ url_for('patient_list') }}" style="margin-left:8px; text-decoration:none; color:#333;">Clear</a>
-                        {% endif %}
-                    </form>
-                    <a href="{{ url_for('add_patient') }}" style="text-decoration:none;">
-                        <button class="add" type="button">Add Patient</button>
-                    </a>
-                </div>
+                <h1 id="hmm">Appointments List</h1>
+                <form class="searchbar" method="get" action="{{ url_for('appointment_list') }}">
+                    <input type="search" name="name" placeholder="Search by name" value="{{ search|default('') }}"/>
+                    <button type="submit" style="padding:6px 10px;">Search</button>
+                    {% if search %}
+                        <a href="{{ url_for('appointment_list') }}" style="margin-left:8px; text-decoration:none; color:#333;">Clear</a>
+                    {% endif %}
+                </form>
                 <div class="titlee">
                     <div class="app">
-                        <h1>Patient ID</h1>
+                        <h1>Appointment ID</h1>
                     </div>
                     <div class="patient">
                         <h1>Patient Name</h1>
+                    </div>
+                    <div class="patient">
+                        <h1>Doctor Name</h1>
+                    </div>
+                    <div class="patient">
+                        <h1>Appointment Date</h1>
+                    </div>
+                    <div class="patient">
+                        <h1>Appointment Time</h1>
                     </div>
                     <div class="doc">
                         <h1>Actions</h1>
                     </div>
                 </div>
-                {% for i in patienttab%}
+                {% for i in apptab%}
                 <div class="title">
                     <div class="app">
                         <h1>{{i[0]}}</h1>
@@ -64,9 +68,17 @@
                     <div class="patient">
                         <h1>{{i[1]}}</h1>
                     </div>
+                    <div class="patient">
+                        <h1>{{i[2]}}</h1>
+                    </div>
+                    <div class="patient">
+                        <h1>{{i[3]}}</h1>
+                    </div>
+                    <div class="patient">
+                        <h1>{{i[4]}}</h1>
+                    </div>
                     <div class="stat" style="display: flex; justify-content: space-evenly; align-items: center; ">
                         <button style="background-color: rgb(255, 255, 255);">Edit</button>
-                        <button style="background-color: rgb(255, 255, 255);">Blacklist</button>
                     </div>
                 </div>
                 {% endfor %}
