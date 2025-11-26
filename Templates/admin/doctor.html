@@ -23,7 +23,7 @@
             </div>
             <div class="icon">
                 <img src="{{ url_for('static',filename='icons/app.svg')}}" alt="">
-                <a href="">Appointments</a>
+                <a href="/appointment_list">Appointments</a>
             </div>
             <div class="icon">
                 <img src="{{ url_for('static',filename='icons/logout.svg')}}" alt="">
@@ -56,7 +56,7 @@
                         <h1>Name</h1>
                     </div>
                     <div class="doc">
-                        <h1>Specialization</h1>
+                        <h1>State</h1>
                     </div>
                     <div class="doc">
                         <h1>Action</h1>
@@ -80,7 +80,15 @@
                                 <a href="{{ url_for('editdoc', doc_id=i[0]) }}" style="text-decoration:none;">
                                     <button style="background-color: rgb(0, 255, 55);">Edit</button>
                                 </a>
-                        <button style="background-color: rgb(255, 255, 255);">Blacklist</button>
+                                {% if i[3] == 'Blacklist' %}
+                                    <form action="{{url_for('unbandoc',doc_id=i[0])}}" method="post">
+                                        <button type="submit" style="background-color: rgb(255, 255, 255);">Revert</button>
+                                    </form>
+                                {% else %}
+                                    <form action="{{url_for('blacklistdoc',doc_id=i[0])}}" method="post">
+                                        <button type="submit" style="background-color: rgb(255, 255, 255);">Blacklist</button>
+                                    </form>
+                                {% endif %}
                     </div>
                 </div>
                 {% endfor %}

@@ -52,6 +52,9 @@
                     <div class="patient">
                         <h1>Patient Name</h1>
                     </div>
+                    <div class="patient">
+                        <h1>State</h1>
+                    </div>
                     <div class="doc">
                         <h1>Actions</h1>
                     </div>
@@ -64,11 +67,22 @@
                     <div class="patient">
                         <h1>{{i[1]}}</h1>
                     </div>
+                    <div class="patient">
+                        <h1>{{i[2]}}</h1>
+                    </div>
                     <div class="stat" style="display: flex; justify-content: space-evenly; align-items: center; ">
                         <a href="{{ url_for('editpat', patient_id=i[0]) }}" style="text-decoration:none;">
                             <button style="background-color: rgb(255, 255, 255);">Edit</button>
                         </a>
-                        <button style="background-color: rgb(255, 255, 255);">Blacklist</button>
+                        {% if i[2] == 'Blacklist' %}
+                                <form action="{{url_for('unbanpat',patient_id=i[0])}}" method="post">
+                                    <button type="submit" style="background-color: rgb(255, 255, 255);">Revert</button>
+                                </form>
+                        {% else %}
+                                <form action="{{url_for('blacklistpat',patient_id=i[0])}}" method="post">
+                                    <button type="submit" style="background-color: rgb(255, 255, 255);">Blacklist</button>
+                                </form>
+                        {% endif %}
                     </div>
                 </div>
                 {% endfor %}

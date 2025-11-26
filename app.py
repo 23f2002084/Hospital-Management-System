@@ -6,6 +6,64 @@ app = Flask(__name__, instance_relative_config = True)
 app.secret_key="Narendran20$"
 database=os.path.join(app.instance_path, "hospitalmanagement.db")
 
+def dbinit():
+    con=sqlite3.connect(database)
+    cur=con.cursor()
+    cur.execute('''CREATE TABLE IF NOT EXISTS USERS(
+                USER_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                NAME TEXT,
+                EMAIL TEXT UNIQUE,
+                PASSWORD TEXT,
+                GENDER TEXT,
+                PHONE_NUMBER TEXT,
+                ROLE TEXT,
+                STATE TEXT,
+                DOB TEXT)''')
+    con.commit()
+    cur.execute('INSERT OR IGNORE INTO USERS (NAME,EMAIL,PASSWORD,GENDER,PHONE_NUMBER,ROLE,STATE) VALUES("ADMIN","admin@123","admin123","NA","9962286705","Admin","Active")')
+    con.commit()
+    cur.execute('''CREATE TABLE IF NOT EXISTS PATIENTS(
+                PATIENT_ID INTEGER PRIMARY KEY,
+                PATIENT_NAME TEXT,
+                AGE INTEGER,
+                GENDER TEXT,
+                ADDRESS TEXT,
+                CONTACT TEXT,
+                BLOOD_GRP TEXT,
+                ALLERGIES TEXT,
+                STATE TEXT,
+                FOREIGN KEY (PATIENT_ID) REFERENCES USERS (USER_ID) ON DELETE CASCADE)''')
+    con.commit()
+    cur.execute('''CREATE TABLE IF NOT EXISTS DEPARTMENTS(
+                DEPT_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                DEPT_NAME TEXT)''')
+    con.commit()
+    cur.execute('''CREATE TABLE IF NOT EXISTS DOCTORS(
+                DOC_ID INTEGER PRIMARY KEY,
+                DOC_NAME TEXT,
+                DEPT_NAME TEXT,
+                STATE TEXT,
+                FOREIGN KEY (DOC_ID) REFERENCES USERS (USER_ID) ON DELETE CASCADE,
+                FOREIGN KEY (DEPT_NAME) REFERENCES DEPARTMENTS (DEPT_NAME))''')
+    con.commit()
+    cur.execute('''CREATE TABLE IF NOT EXISTS APPOINTMENTS(
+                APPOINTMENT_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                PATIENT_ID INTEGER,
+                PATIENT_NAME TEXT,
+                DOC_ID INTEGER,
+                DOC_NAME TEXT,
+                APPOINTMENT_DATE DATE,
+                APPOINTMENT_TIME TIME,
+                STATUS TEXT,
+                FOREIGN KEY (PATIENT_ID) REFERENCES PATIENTS (PATIENT_ID),
+                FOREIGN KEY (PATIENT_NAME) REFERENCES PATIENTS (PATIENT_NAME),
+                FOREIGN KEY (DOC_ID) REFERENCES DOCTORS (DOC_ID),
+                FOREIGN KEY (DOC_NAME) REFERENCES DOCTORS (DOC_NAME),
+                UNIQUE (DOC_ID, APPOINTMENT_DATE, APPOINTMENT_TIME))''')
+    con.commit()
+    con.close()
+
+
 def count():
     con=sqlite3.connect(database)
     cur=con.cursor()
@@ -13,7 +71,7 @@ def count():
     doccount=cur.fetchone()[0]
     cur.execute('SELECT COUNT(*)FROM USERS')
     usercount=cur.fetchone()[0]
-    cur.execute('SELECT COUNT(*)FROM DEPARTMENT')
+    cur.execute('SELECT COUNT(*)FROM DEPARTMENTS')
     deptcount=cur.fetchone()[0]
     cur.execute('SELECT COUNT(*)FROM PATIENTS')
     patcount=cur.fetchone()[0]
@@ -38,24 +96,9 @@ def tabledata(drname=None):
     con.close()
     return tab
 
-def patientlist():
-    con=sqlite3.connect(database)
-    cur=con.cursor()
-    cur.execute("SELECT PATIENT_ID,PATIENT_NAME FROM PATIENTS")
-    patienttab=cur.fetchall()
-    con.close()
-    return patienttab
-
-def doctorlist():
-    con=sqlite3.connect(database)
-    cur=con.cursor()
-    cur.execute("SELECT DOC_ID,DEPT_ID,DOC_NAME,SPECIALIZATION FROM DOCTORS")
-    doctab=cur.fetchall()
-    con.close()
-    return doctab
-
 @app.route('/')
 def index():
+    dbinit()
     return render_template("index.html")
 
 @app.route('/signin')
@@ -74,11 +117,19 @@ def register():
     con=sqlite3.connect(database)
     cur=con.cursor()
     cur.execute(
-        '''INSERT INTO USERS(NAME,EMAIL,PASSWORD,GENDER,PHONE_NUMBER,DOB,ROLE)
-           VALUES(?,?,?,?,?,?,?);''',
+        '''INSERT INTO USERS(NAME,EMAIL,PASSWORD,GENDER,PHONE_NUMBER,DOB,ROLE,STATE)
+           VALUES(?,?,?,?,?,?,?,"Active");''',
            (uname,email,pwd,gender,pnum,dob,role)
     )
     con.commit()
+    if role=="Patient":
+        cur.execute('''INSERT INTO PATIENTS(PATIENT_NAME,GENDER,STATE) VALUES(?,?,"Active")''',
+                    (uname,gender))
+        con.commit()
+    if role=="Doctor":
+        cur.execute('''INSERT INTO DOCTORS(DOC_NAME,STATE) VALUES(?,"Active")''',
+                    (uname,))
+        con.commit()
     con.close()
     return redirect(url_for('index'))
 
@@ -131,9 +182,9 @@ def patient_list():
     con=sqlite3.connect(database)
     cur=con.cursor()
     if name:
-        cur.execute("SELECT PATIENT_ID,PATIENT_NAME FROM PATIENTS WHERE PATIENT_NAME LIKE ?", ('%'+name+'%',))
+        cur.execute("SELECT PATIENT_ID,PATIENT_NAME, STATE FROM PATIENTS WHERE PATIENT_NAME LIKE ?", ('%'+name+'%',))
     else:
-        cur.execute("SELECT PATIENT_ID,PATIENT_NAME FROM PATIENTS")
+        cur.execute("SELECT PATIENT_ID,PATIENT_NAME, STATE FROM PATIENTS")
     patienttab = cur.fetchall()
     con.close()
     return render_template("admin/patient.html",patienttab=patienttab, search=name)
@@ -144,9 +195,9 @@ def doctor_list():
     con=sqlite3.connect(database)
     cur=con.cursor()
     if name:
-        cur.execute("SELECT DOC_ID,DEPT_ID,DOC_NAME,SPECIALIZATION FROM DOCTORS WHERE DOC_NAME LIKE ?", ('%'+name+'%',))
+        cur.execute("SELECT DOC_ID,DEPT_NAME,DOC_NAME, STATE FROM DOCTORS WHERE DOC_NAME LIKE ?", ('%'+name+'%',))
     else:
-        cur.execute("SELECT DOC_ID,DEPT_ID,DOC_NAME,SPECIALIZATION FROM DOCTORS")
+        cur.execute("SELECT DOC_ID,DEPT_NAME,DOC_NAME, STATE FROM DOCTORS")
     doctab = cur.fetchall()
     con.close()
     return render_template("admin/doctor.html",doctab=doctab, search=name)
@@ -168,12 +219,12 @@ def appointment_list():
 @app.route('/add_doctor', methods=['GET', 'POST'])
 def add_doctor():
     if request.method == 'POST':
-        dept_id = request.form.get('dept_id')
+        dept_name = request.form.get('dept_name')
         name = request.form.get('name')
         specialization = request.form.get('specialization')
         con = sqlite3.connect(database)
         cur = con.cursor()
-        cur.execute("INSERT INTO DOCTORS (DEPT_ID, DOC_NAME, SPECIALIZATION) VALUES (?, ?, ?)", (dept_id, name, specialization))
+        cur.execute("INSERT INTO DOCTORS (DEPT_NAME, DOC_NAME, SPECIALIZATION) VALUES (?, ?, ?)", (dept_name, name, specialization))
         con.commit()
         con.close()
         return redirect(url_for('doctor_list'))
@@ -216,6 +267,23 @@ def editdoc(doc_id):
         'id': doc[0], 'dept_id': doc[1], 'doc_name': doc[2], 'specialization': doc[3]
     })
 
+@app.route('/blacklistdoc/<int:doc_id>', methods=['POST'])
+def blacklistdoc(doc_id):
+    con = sqlite3.connect(database)
+    cur = con.cursor()
+    cur.execute("UPDATE DOCTORS SET STATE ='Blacklist' WHERE DOC_ID = ?",(doc_id,))
+    con.commit()
+    con.close()
+    return redirect(url_for('doctor_list'))
+
+@app.route('/unbandoc/<int:doc_id>', methods=['POST'])
+def unbandoc(doc_id):
+    con = sqlite3.connect(database)
+    cur = con.cursor()
+    cur.execute("UPDATE DOCTORS SET STATE ='Active' WHERE DOC_ID = ?",(doc_id,))
+    con.commit()
+    con.close()
+    return redirect(url_for('doctor_list'))
 
 @app.route('/editpat/<int:patient_id>', methods=['GET', 'POST'])
 def editpat(patient_id):
@@ -234,6 +302,24 @@ def editpat(patient_id):
     if not p:
         return "Patient not found", 404
     return render_template('admin/editpat.html', patient={'id': p[0], 'name': p[1]})
+
+@app.route('/blacklistpat/<int:patient_id>', methods=['POST'])
+def blacklistpat(patient_id):
+    con = sqlite3.connect(database)
+    cur = con.cursor()
+    cur.execute("UPDATE PATIENTS SET STATE ='Blacklist' WHERE PATIENT_ID = ?",(patient_id,))
+    con.commit()
+    con.close()
+    return redirect(url_for('patient_list'))
+
+@app.route('/unbanpat/<int:patient_id>', methods=['POST'])
+def unbanpat(patient_id):
+    con = sqlite3.connect(database)
+    cur = con.cursor()
+    cur.execute("UPDATE PATIENTS SET STATE ='Active' WHERE PATIENT_ID = ?",(patient_id,))
+    con.commit()
+    con.close()
+    return redirect(url_for('patient_list'))
 
 if __name__ == "__main__":
     app.run(debug=True)
