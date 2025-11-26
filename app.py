@@ -49,7 +49,7 @@ def patientlist():
 def doctorlist():
     con=sqlite3.connect(database)
     cur=con.cursor()
-    cur.execute("SELECT DOC_ID,DEPT_ID,NAME,SPECIALIZATION FROM DOCTORS")
+    cur.execute("SELECT DOC_ID,DEPT_ID,DOC_NAME,SPECIALIZATION FROM DOCTORS")
     doctab=cur.fetchall()
     con.close()
     return doctab
@@ -144,9 +144,9 @@ def doctor_list():
     con=sqlite3.connect(database)
     cur=con.cursor()
     if name:
-        cur.execute("SELECT DOC_ID,DEPT_ID,NAME,SPECIALIZATION FROM DOCTORS WHERE NAME LIKE ?", ('%'+name+'%',))
+        cur.execute("SELECT DOC_ID,DEPT_ID,DOC_NAME,SPECIALIZATION FROM DOCTORS WHERE DOC_NAME LIKE ?", ('%'+name+'%',))
     else:
-        cur.execute("SELECT DOC_ID,DEPT_ID,NAME,SPECIALIZATION FROM DOCTORS")
+        cur.execute("SELECT DOC_ID,DEPT_ID,DOC_NAME,SPECIALIZATION FROM DOCTORS")
     doctab = cur.fetchall()
     con.close()
     return render_template("admin/doctor.html",doctab=doctab, search=name)
@@ -173,7 +173,7 @@ def add_doctor():
         specialization = request.form.get('specialization')
         con = sqlite3.connect(database)
         cur = con.cursor()
-        cur.execute("INSERT INTO DOCTORS (DEPT_ID, NAME, SPECIALIZATION) VALUES (?, ?, ?)", (dept_id, name, specialization))
+        cur.execute("INSERT INTO DOCTORS (DEPT_ID, DOC_NAME, SPECIALIZATION) VALUES (?, ?, ?)", (dept_id, name, specialization))
         con.commit()
         con.close()
         return redirect(url_for('doctor_list'))
@@ -191,6 +191,49 @@ def add_patient():
         con.close()
         return redirect(url_for('patient_list'))
     return render_template('admin/add_patient.html')
+
+
+@app.route('/editdoc/<int:doc_id>', methods=['GET', 'POST'])
+def editdoc(doc_id):
+    con = sqlite3.connect(database)
+    cur = con.cursor()
+    if request.method == 'POST':
+        dept_id = request.form.get('dept_id')
+        doc_name = request.form.get('doc_name')
+        specialization = request.form.get('specialization')
+        cur.execute("UPDATE DOCTORS SET DEPT_ID=?, DOC_NAME=?, SPECIALIZATION=? WHERE DOC_ID=?", (dept_id, doc_name, specialization, doc_id))
+        con.commit()
+        con.close()
+        return redirect(url_for('doctor_list'))
+    
+    cur.execute("SELECT DOC_ID, DEPT_ID, DOC_NAME, SPECIALIZATION FROM DOCTORS WHERE DOC_ID=?", (doc_id,))
+    doc = cur.fetchone()
+    con.close()
+    if not doc:
+        return "Doctor not found", 404
+    
+    return render_template('admin/editdoc.html', doc={
+        'id': doc[0], 'dept_id': doc[1], 'doc_name': doc[2], 'specialization': doc[3]
+    })
+
+
+@app.route('/editpat/<int:patient_id>', methods=['GET', 'POST'])
+def editpat(patient_id):
+    con = sqlite3.connect(database)
+    cur = con.cursor()
+    if request.method == 'POST':
+        patient_name = request.form.get('patient_name')
+        cur.execute("UPDATE PATIENTS SET PATIENT_NAME=? WHERE PATIENT_ID=?", (patient_name, patient_id))
+        con.commit()
+        con.close()
+        return redirect(url_for('patient_list'))
+
+    cur.execute("SELECT PATIENT_ID, PATIENT_NAME FROM PATIENTS WHERE PATIENT_ID=?", (patient_id,))
+    p = cur.fetchone()
+    con.close()
+    if not p:
+        return "Patient not found", 404
+    return render_template('admin/editpat.html', patient={'id': p[0], 'name': p[1]})
 
 if __name__ == "__main__":
     app.run(debug=True)

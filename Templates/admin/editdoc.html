@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Doctor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admindash.css') }}">
+    <style>
+        .form-wrap { padding: 24px; max-width:480px; margin:24px; background:#fff; border-radius:6px }
+        .form-row { margin-bottom:12px }
+        label { display:block; margin-bottom:6px }
+        input { width:100%; padding:8px }
+        button { padding:8px 12px }
+    </style>
+</head>
+<body>
+    <section class="main">
+        <div class="view">
+            <div class="appointments">
+                <h1>Edit Doctor</h1>
+                <div class="form-wrap">
+                    <form method="post" action="{{ url_for('editdoc', doc_id=doc.id) }}">
+                        <div class="form-row">
+                            <label for="dept_id">Department ID</label>
+                            <input id="dept_id" name="dept_id" value="{{ doc.dept_id }}" required />
+                        </div>
+                        <div class="form-row">
+                            <label for="doc_name">Name</label>
+                            <input id="doc_name" name="doc_name" value="{{ doc.doc_name }}" required />
+                        </div>
+                        <div class="form-row">
+                            <label for="specialization">Specialization</label>
+                            <input id="specialization" name="specialization" value="{{ doc.specialization }}" />
+                        </div>
+                        <div style="display:flex; gap:8px;">
+                            <button type="submit" style="background:#4CAF50; color:#fff; border:none;">Save Changes</button>
+                            <a href="{{ url_for('doctor_list') }}"><button type="button">Cancel</button></a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
