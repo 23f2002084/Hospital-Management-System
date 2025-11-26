@@ -6,39 +6,72 @@
     <title>Patient</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/admindash.css') }}">
     <style>
-        .form-wrap { 
-            padding: 24px; 
-            max-width:480px; 
-            margin:24px; 
-            background:#fff; 
-            border-radius:6px;
+        .appointments h1{
+            color: white;
         }
-        .form-row { 
-            margin-bottom:12px;
+        .forms{
+             width: 500px;
+             margin:34px;
+             border-radius:6px;
         }
-        label { 
-            display:block; 
-            margin-bottom:6px; 
+        form{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 2em;
         }
+        .rows { 
+            width: 400px;
+        }
+        label { display:block; margin-bottom:6px }
         input { 
-            width:100%; 
-            padding:8px; 
+            width:100%;
+            height: 40px;
+            border-radius: 8px;
+            border: none;
+            padding-left: 10px;
         }
         button { 
             padding:8px 12px;
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
     <section class="main">
-        <div class="view">
-            <div class="appointments">
+        <div class="viewww">
+            <div class="appointments" style="height: 100%; margin-bottom: 8px; margin-top: 8px; width: 98%;">
                 <h1>Add Patient</h1>
-                <div class="form-wrap">
+                <div class="forms">
                     <form method="post" action="{{ url_for('add_patient') }}">
-                        <div class="form-row">
+                        <div class="rows">
                             <label for="patient_name">Patient Name</label>
                             <input id="patient_name" name="patient_name" required />
+                        </div>
+                        <div class="rows">
+                            <label for="age">Age</label>
+                            <input id="age" name="age" required />
+                        </div>
+                        <div class="rows">
+                            <label for="gender">Gender</label>
+                            <input id="gender" name="gender" required />
+                        </div>
+                        <div class="rows">
+                            <label for="address">Address</label>
+                            <input id="address" name="address" required />
+                        </div>
+                        <div class="rows">
+                            <label for="contact">Contact</label>
+                            <input id="contact" name="contact" required />
+                        </div>
+                        <div class="rows">
+                            <label for="blood">Blood</label>
+                            <input id="blood" name="blood" required />
+                        </div>
+                        <div class="rows">
+                            <label for="allergies">Allergies</label>
+                            <input id="allergies" name="allergies" required />
                         </div>
                         <div style="display:flex; gap:8px;">
                             <button type="submit" style="background:#4CAF50; color:#fff; border:none;">Add Patient</button>

@@ -6,31 +6,56 @@
     <title>Add Doctor</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/admindash.css') }}">
     <style>
-        .form-wrap { padding: 24px; max-width:480px; margin:24px; background:#fff; border-radius:6px }
-        .form-row { margin-bottom:12px }
+        .appointments h1{
+            color: white;
+        }
+        .forms{
+             width: 500px;
+             margin:34px;
+             border-radius:6px;
+        }
+        form{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 2em;
+        }
+        .rows { 
+            width: 400px;
+        }
         label { display:block; margin-bottom:6px }
-        input { width:100%; padding:8px }
-        button { padding:8px 12px }
+        input { 
+            width:100%;
+            height: 40px;
+            border-radius: 8px;
+            border: none;
+            padding-left: 10px;
+        }
+        button { 
+            padding:8px 12px;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
     <section class="main">
-        <div class="view">
-            <div class="appointments">
+        <div class="viewww">
+            <div class="appointments" style="height: 100%; margin-bottom: 8px; margin-top: 8px;">
                 <h1>Add Doctor</h1>
-                <div class="form-wrap">
+                <div class="forms">
                     <form method="post" action="{{ url_for('add_doctor') }}">
-                        <div class="form-row">
-                            <label for="dept_id">Department ID</label>
-                            <input id="dept_id" name="dept_id" required />
+                        <div class="rows">
+                            <label for="dept_name">Department Name</label>
+                            <input id="dept_name" name="dept_name" required placeholder="Enter Department" />
                         </div>
-                        <div class="form-row">
+                        <div class="rows">
                             <label for="name">Name</label>
-                            <input id="name" name="name" required />
+                            <input id="name" name="name" required  placeholder="Enter Name"/>
                         </div>
-                        <div class="form-row">
-                            <label for="specialization">Specialization</label>
-                            <input id="specialization" name="specialization" />
+                        <div class="rows">
+                            <label for="gender">Gender</label>
+                            <input id="gender" name="gender"  placeholder="Enter gender"/>
                         </div>
                         <div style="display:flex; gap:8px;">
                             <button type="submit" style="background:#4CAF50; color:#fff; border:none;">Add Doctor</button>

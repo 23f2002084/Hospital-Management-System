@@ -78,7 +78,7 @@
                     </div>
                     <div class="stat" style="display: flex; justify-content: space-evenly; align-items: center; ">
                                 <a href="{{ url_for('editdoc', doc_id=i[0]) }}" style="text-decoration:none;">
-                                    <button style="background-color: rgb(0, 255, 55);">Edit</button>
+                                    <button style="background-color: #37d84c;">Edit</button>
                                 </a>
                                 {% if i[3] == 'Blacklist' %}
                                     <form action="{{url_for('unbandoc',doc_id=i[0])}}" method="post">

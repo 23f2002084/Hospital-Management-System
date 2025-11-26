@@ -79,6 +79,23 @@ a{
     flex-direction: column;
 }
 
+.viewww{
+    width: 100%;
+    margin-left: 10px;
+    margin-right: 10px;
+    min-height: 90vh;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    background-color: #202021;
+    border-radius: 20px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    scrollbar-width: none;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
 .welcome{
     width: 99%;
     margin-top: 5px;
@@ -159,6 +176,17 @@ a{
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+
+.appointments h1{
+    color: white;
+    font-family: 'sfprob';
+    font-size: 25px;
+}
+
+.appointments label{
+    color: white;
+    font-family: 'sfprob';
 }
 
 .appointmentss{
@@ -264,5 +292,4 @@ button{
     background-color: #37d84c;
     height: 40px;
     color: white;
-
 }

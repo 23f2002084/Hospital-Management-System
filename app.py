@@ -128,7 +128,7 @@ def register():
         con.commit()
     if role=="Doctor":
         cur.execute('''INSERT INTO DOCTORS(DOC_NAME,STATE) VALUES(?,"Active")''',
-                    (uname,))
+                    ("Dr. "+uname,))
         con.commit()
     con.close()
     return redirect(url_for('index'))
@@ -221,10 +221,12 @@ def add_doctor():
     if request.method == 'POST':
         dept_name = request.form.get('dept_name')
         name = request.form.get('name')
-        specialization = request.form.get('specialization')
+        gender=request.form.get('gender')
         con = sqlite3.connect(database)
         cur = con.cursor()
-        cur.execute("INSERT INTO DOCTORS (DEPT_NAME, DOC_NAME, SPECIALIZATION) VALUES (?, ?, ?)", (dept_name, name, specialization))
+        cur.execute("INSERT INTO USERS (NAME, EMAIL, PASSWORD, GENDER, ROLE, STATE) VALUES (?, ?, ?, ?, ?, ?)", ("Dr. "+name, name+"@gmail.com",name, gender, "Doctor", "Active"))
+        con.commit()
+        cur.execute("INSERT INTO DOCTORS (DEPT_NAME, DOC_NAME, STATE) VALUES (?, ?, ?)", (dept_name,"Dr. "+name, "Active"))
         con.commit()
         con.close()
         return redirect(url_for('doctor_list'))
@@ -235,9 +237,18 @@ def add_doctor():
 def add_patient():
     if request.method == 'POST':
         patient_name = request.form.get('patient_name')
+        age = request.form.get('age')
+        gender = request.form.get('gender')
+        address = request.form.get('address')
+        contact = request.form.get('contact')
+        blood = request.form.get('blood')
+        allergies = request.form.get('allergies')
         con = sqlite3.connect(database)
         cur = con.cursor()
-        cur.execute("INSERT INTO PATIENTS (PATIENT_NAME) VALUES (?)", (patient_name,))
+        cur.execute("INSERT INTO USERS (NAME, EMAIL, PASSWORD, GENDER, PHONE_NUMBER, ROLE, STATE) VALUES (?, ?, ?, ?, ?, ?, ?)", (patient_name, patient_name+"@gmail.com",patient_name, gender, contact, "Patient", "Active"))
+        con.commit()
+        cur.execute("INSERT INTO PATIENTS (PATIENT_NAME, AGE, GENDER, ADDRESS, CONTACT, BLOOD_GRP, ALLERGIES, STATE) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                    (patient_name, age, gender, address, contact, blood, allergies, "Active" ))
         con.commit()
         con.close()
         return redirect(url_for('patient_list'))
@@ -249,22 +260,21 @@ def editdoc(doc_id):
     con = sqlite3.connect(database)
     cur = con.cursor()
     if request.method == 'POST':
-        dept_id = request.form.get('dept_id')
+        dept_name= request.form.get('dept_name')
         doc_name = request.form.get('doc_name')
-        specialization = request.form.get('specialization')
-        cur.execute("UPDATE DOCTORS SET DEPT_ID=?, DOC_NAME=?, SPECIALIZATION=? WHERE DOC_ID=?", (dept_id, doc_name, specialization, doc_id))
+        cur.execute("UPDATE DOCTORS SET DEPT_NAME=?, DOC_NAME=? WHERE DOC_ID=?", (dept_name, doc_name, doc_id))
         con.commit()
         con.close()
         return redirect(url_for('doctor_list'))
     
-    cur.execute("SELECT DOC_ID, DEPT_ID, DOC_NAME, SPECIALIZATION FROM DOCTORS WHERE DOC_ID=?", (doc_id,))
+    cur.execute("SELECT DOC_ID, DEPT_NAME, DOC_NAME FROM DOCTORS WHERE DOC_ID=?", (doc_id,))
     doc = cur.fetchone()
     con.close()
     if not doc:
         return "Doctor not found", 404
     
     return render_template('admin/editdoc.html', doc={
-        'id': doc[0], 'dept_id': doc[1], 'doc_name': doc[2], 'specialization': doc[3]
+        'id': doc[0], 'dept_name': doc[1], 'doc_name': doc[2]
     })
 
 @app.route('/blacklistdoc/<int:doc_id>', methods=['POST'])
