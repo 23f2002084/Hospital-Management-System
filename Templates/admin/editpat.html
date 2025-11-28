@@ -6,26 +6,78 @@
     <title>Edit Patient</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/admindash.css') }}">
     <style>
-        .form-wrap { padding: 24px; max-width:480px; margin:24px; background:#fff; border-radius:6px }
-        .form-row { margin-bottom:12px }
+        .appointments h1{
+            color: white;
+        }
+        .forms{
+             width: 500px;
+             margin:34px;
+             border-radius:6px;
+        }
+        form{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 2em;
+        }
+        .rows { 
+            width: 400px;
+        }
         label { display:block; margin-bottom:6px }
-        input { width:100%; padding:8px }
-        button { padding:8px 12px }
+        input, select { 
+            width:100%;
+            height: 40px;
+            border-radius: 8px;
+            border: none;
+            padding-left: 10px;
+        }
+        select{
+            width: 410px;
+        }
+        button { 
+            padding:8px 12px;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
     <section class="main">
-        <div class="view">
-            <div class="appointments">
-                <h1>Edit Patient</h1>
-                <div class="form-wrap">
-                    <form method="post" action="{{ url_for('edit_patient', patient_id=patient.id) }}">
-                        <div class="form-row">
+        <div class="viewww">
+            <div class="appointments" style="min-height: 90vh; margin-bottom: 12px; margin-top: 12px; width: 98%;">
+                <h1 style="margin-top: 20px;">Edit Patient</h1>
+                <div class="form" style="margin-top: 20px;">
+                    <form method="post" action="{{ url_for('editpat', patient_id=patient.id) }}">
+                        <div class="rows">
                             <label for="patient_name">Patient Name</label>
-                            <input id="patient_name" name="patient_name" value="{{ patient.name }}" required />
+                            <input id="patient_name" name="patient_name" value="{{ patient.name }}" />
                         </div>
-                        <div style="display:flex; gap:8px;">
-                            <button type="submit" style="background:#4CAF50; color:#fff; border:none;">Save Changes</button>
+                        <div class="rows">
+                            <label for="age">Patient Age</label>
+                            <input id="age" name="age" value="{{ patient.age }}" placeholder="Enter Patient's age"  />
+                        </div>
+                        <div class="rows">
+                            <label for="gender">Patient Gender</label>
+                            <input id="gender" name="gender" value="{{ patient.gender }}" placeholder="Enter Patient's Gender" />
+                        </div>
+                        <div class="rows">
+                            <label for="address">Address</label>
+                            <input id="address" name="address" value="{{ patient.address }}" placeholder="Enter Patient's Address" />
+                        </div>
+                        <div class="rows">
+                            <label for="contact">Contact</label>
+                            <input id="contact" name="contact" value="{{ patient.contact }}" placeholder="Enter Patient's Contact" />
+                        </div>
+                        <div class="rows">
+                            <label for="blood">Blood Group</label>
+                            <input id="blood" name="blood" value="{{ patient.blood }}" placeholder="Enter Patient's Blood Group" />
+                        </div>
+                        <div class="rows">
+                            <label for="allergies">Allergies</label>
+                            <input id="allergies" name="allergies" value="{{ patient.allergies }}" placeholder="Enter Patient's Allergies" />
+                        </div>
+                        <div style="display:flex; gap:8px; margin-bottom: 20px;">
+                            <button type="submit" style="background:#4CAF50; color:#fff; border:none;">Save</button>
                             <a href="{{ url_for('patient_list') }}"><button type="button">Cancel</button></a>
                         </div>
                     </form>

@@ -46,11 +46,23 @@
                     </a>
                 </div>
                 <div class="titlee">
-                    <div class="app">
-                        <h1>Patient ID</h1>
+                    <div class="patient">
+                        <h1>Name</h1>
                     </div>
                     <div class="patient">
-                        <h1>Patient Name</h1>
+                        <h1>Age</h1>
+                    </div>
+                    <div class="patient">
+                        <h1>Gender</h1>
+                    </div>
+                    <div class="patient">
+                        <h1>Contact</h1>
+                    </div>
+                    <div class="patient">
+                        <h1>Blood Grp</h1>
+                    </div>
+                    <div class="patient">
+                        <h1>Allergies</h1>
                     </div>
                     <div class="patient">
                         <h1>State</h1>
@@ -61,18 +73,30 @@
                 </div>
                 {% for i in patienttab%}
                 <div class="title">
-                    <div class="app">
-                        <h1>{{i[0]}}</h1>
-                    </div>
                     <div class="patient">
                         <h1>{{i[1]}}</h1>
                     </div>
                     <div class="patient">
                         <h1>{{i[2]}}</h1>
                     </div>
-                    <div class="stat" style="display: flex; justify-content: space-evenly; align-items: center; ">
+                    <div class="patient">
+                        <h1>{{i[3]}}</h1>
+                    </div>
+                    <div class="patient">
+                        <h1>{{i[5]}}</h1>
+                    </div>
+                    <div class="patient">
+                        <h1>{{i[6]}}</h1>
+                    </div>
+                    <div class="patient">
+                        <h1>{{i[7]}}</h1>
+                    </div>
+                    <div class="patient">
+                        <h1>{{i[8]}}</h1>
+                    </div>
+                    <div class="stat" style="display: flex; flex-direction: column; justify-content: space-evenly; align-items: center; ">
                         <a href="{{ url_for('editpat', patient_id=i[0]) }}" style="text-decoration:none;">
-                            <button style="background-color: rgb(255, 255, 255);">Edit</button>
+                            <button style="background-color: #37d84c;">Edit</button>
                         </a>
                         {% if i[2] == 'Blacklist' %}
                                 <form action="{{url_for('unbanpat',patient_id=i[0])}}" method="post">

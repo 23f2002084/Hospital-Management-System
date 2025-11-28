@@ -61,6 +61,17 @@ def dbinit():
                 FOREIGN KEY (DOC_NAME) REFERENCES DOCTORS (DOC_NAME),
                 UNIQUE (DOC_ID, APPOINTMENT_DATE, APPOINTMENT_TIME))''')
     con.commit()
+    cur.execute('''CREATE TABLE IF NOT EXISTS DOC_AVAILABILITY(
+                AVAILABLE_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                DOC_ID INTEGER,
+                DOC_NAME TEXT,
+                DAY TEXT CHECK (DAY IN ('MON','TUE','WED','THU','FRI','SAT','SUN')),
+                TIME TEXT,
+                AVAILABILITY TEXT,
+                FOREIGN KEY (DOC_ID) REFERENCES DOCTORS (DOC_ID),
+                FOREIGN KEY (DOC_NAME) REFERENCES DOCTORS (DOC_NAME)
+                )''')
+    con.commit()
     con.close()
 
 
@@ -147,6 +158,7 @@ def login():
         res=cur.fetchone()
         con.close()
         if res:
+            session['userid']=res[0]
             session['username']=res[1]
             if role=="Doctor":
                 return redirect(url_for('doctor_dashboard'))
@@ -167,12 +179,18 @@ def admin_dashboard():
 
 @app.route('/patient_dashboard')
 def patient_dashboard():
-    return render_template("patient/dashboard.html")
+    uname = session.get('username')
+    return render_template("patient/dashboard.html",patname=uname)
 
 @app.route('/doctor_dashboard')
 def doctor_dashboard():
-    if 'username' in session:
-        drname=session['username']
+    uname = request.form.get('doc_name') or session.get('username')
+    uid = request.form.get('doc_id') or session.get('userid')
+    con = sqlite3.connect(database)
+    cur = con.cursor()
+    cur.execute('SELECT DOC_ID, DOC_NAME FROM DOCTORS WHERE DOC_NAME LIKE ?', (f"%{uname}%",))
+    res = cur.fetchone() 
+    docid, drname = res[0], res[1]
     tab=tabledata(drname)
     return render_template("doctor/dashboard.html",drname=drname,tab=tab)
 
@@ -182,9 +200,9 @@ def patient_list():
     con=sqlite3.connect(database)
     cur=con.cursor()
     if name:
-        cur.execute("SELECT PATIENT_ID,PATIENT_NAME, STATE FROM PATIENTS WHERE PATIENT_NAME LIKE ?", ('%'+name+'%',))
+        cur.execute("SELECT * FROM PATIENTS WHERE PATIENT_NAME LIKE ?", ('%'+name+'%',))
     else:
-        cur.execute("SELECT PATIENT_ID,PATIENT_NAME, STATE FROM PATIENTS")
+        cur.execute("SELECT * FROM PATIENTS")
     patienttab = cur.fetchall()
     con.close()
     return render_template("admin/patient.html",patienttab=patienttab, search=name)
@@ -270,8 +288,6 @@ def editdoc(doc_id):
     cur.execute("SELECT DOC_ID, DEPT_NAME, DOC_NAME FROM DOCTORS WHERE DOC_ID=?", (doc_id,))
     doc = cur.fetchone()
     con.close()
-    if not doc:
-        return "Doctor not found", 404
     
     return render_template('admin/editdoc.html', doc={
         'id': doc[0], 'dept_name': doc[1], 'doc_name': doc[2]
@@ -300,17 +316,47 @@ def editpat(patient_id):
     con = sqlite3.connect(database)
     cur = con.cursor()
     if request.method == 'POST':
+        parameter=[]
+        values=[]
         patient_name = request.form.get('patient_name')
-        cur.execute("UPDATE PATIENTS SET PATIENT_NAME=? WHERE PATIENT_ID=?", (patient_name, patient_id))
-        con.commit()
+        if patient_name:
+            parameter.append("PATIENT_NAME=?")
+            values.append(patient_name)
+        age = request.form.get('age')
+        if age:
+            parameter.append("AGE=?")
+            values.append(age)
+        gender = request.form.get('gender')
+        if gender:
+            parameter.append("GENDER=?")
+            values.append(gender)
+        address = request.form.get('address')
+        if address:
+            parameter.append("ADDRESS=?")
+            values.append(address)
+        contact = request.form.get('contact')
+        if contact:
+            parameter.append("CONTACT=?")
+            values.append(contact)
+        blood = request.form.get('blood')
+        if blood:
+            parameter.append("BLOOD_GRP=?")
+            values.append(blood)
+        allergies = request.form.get('allergies')
+        if allergies:
+            parameter.append("ALLERGIES=?")
+            values.append(allergies)
+        values.append(patient_id)
+        if parameter:
+            q=f"UPDATE PATIENTS SET {','.join(parameter)} WHERE PATIENT_ID=?"
+            cur.execute(q,values)
+            con.commit()
         con.close()
         return redirect(url_for('patient_list'))
 
     cur.execute("SELECT PATIENT_ID, PATIENT_NAME FROM PATIENTS WHERE PATIENT_ID=?", (patient_id,))
     p = cur.fetchone()
     con.close()
-    if not p:
-        return "Patient not found", 404
     return render_template('admin/editpat.html', patient={'id': p[0], 'name': p[1]})
 
 @app.route('/blacklistpat/<int:patient_id>', methods=['POST'])
@@ -330,6 +376,44 @@ def unbanpat(patient_id):
     con.commit()
     con.close()
     return redirect(url_for('patient_list'))
+
+@app.route('/timeslot', methods=['GET'])
+def timeslot():
+    uname = request.form.get('doc_name') or session.get('username')
+    uid = request.form.get('doc_id') or session.get('userid')
+    con = sqlite3.connect(database)
+    cur = con.cursor()
+    cur.execute('SELECT DOC_ID, DOC_NAME FROM DOCTORS WHERE DOC_NAME LIKE ?', (f"%{uname}%",))
+    res = cur.fetchone() 
+    docid, drname = res[0], res[1]
+    cur.execute('SELECT DAY, TIME FROM DOC_AVAILABILITY WHERE DOC_ID = ?', (docid,))
+    saved_slots = cur.fetchall()
+    con.close()
+    return render_template('doctor/timeslot.html', drname=drname, docid=docid, saved=saved_slots)
+
+@app.route('/saveslots', methods=['POST'])
+def saveslots():
+    uname = request.form.get('doc_name') or session.get('username')
+    uid = request.form.get('doc_id') or session.get('userid')
+    con = sqlite3.connect(database)
+    cur = con.cursor()
+    cur.execute('SELECT DOC_ID, DOC_NAME FROM DOCTORS WHERE DOC_NAME LIKE ?', (f"%{uname}%",))
+    res = cur.fetchone() 
+    docid, drname = res[0], res[1]
+    cur.execute('DELETE FROM DOC_AVAILABILITY WHERE DOC_ID = ?', (docid,))
+
+    days = ["MON","TUE","WED","THU","FRI","SAT","SUN"]
+    for day in days:
+        slots = request.form.getlist(f"{day}[]")
+        for time in slots:
+            cur.execute('''
+                INSERT INTO DOC_AVAILABILITY (DOC_ID, DOC_NAME, DAY, TIME, AVAILABILITY)
+                VALUES (?, ?, ?, ?, ?)''',
+                (docid, drname, day, time, "Available"))
+
+    con.commit()
+    con.close()
+    return redirect(url_for('timeslot'))
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Prevent cache so it always reloads fresh from DB -->
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
+    <title>Doctor-Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admindash.css') }}">
+    <style>
+        .timeslot{
+            height: 93vh;
+            width: 100%;
+        }
+        table{
+            width: 100%;
+            height: 85vh;
+            color: white;
+            padding-left: 10px;
+        }
+        input{
+            width: 45px;
+        }
+    </style>
+</head>
+<body>
+    <section class="main">
+        <div class="navbar" style="margin-top: 300px;">
+            <div class="icon">
+                <img src="{{ url_for('static',filename='icons/home.svg')}}" alt="">
+                <a href="/doctor_dashboard">Home</a>
+            </div>
+            <div class="icon">
+                <img src="{{ url_for('static',filename='icons/patient.svg')}}" alt="">
+                <a href="">Patients</a>
+            </div>
+            <div class="icon">
+                <img src="{{ url_for('static',filename='icons/app.svg')}}" alt="">
+                <a href="">Appointments</a>
+            </div>
+            <div class="icon">
+                <img src="{{ url_for('static',filename='icons/avail.svg')}}" alt="">
+                <a href="/timeslot">Availability</a>
+            </div>
+            <div class="icon">
+                <img src="{{ url_for('static',filename='icons/logout.svg')}}" alt="">
+                <a href="/">Logout</a>
+            </div>
+        </div>
+
+        <div class="view">
+            <div class="timeslot">
+                <form action="/saveslots" method="POST">
+                    <table>
+                        <tr>
+                            <th>Select Your Availability</th>
+                        </tr>
+                        <tbody id="slots"></tbody>
+                    </table>
+                    <button type="submit" style="margin-left: 500px;">Save Slots</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+<script>
+    const savedslots = {{ saved | tojson }}; 
+    const days = ["MON","TUE","WED","THU","FRI","SAT","SUN"];
+    const timeSlots = ["8AM","9AM","10AM","11AM","12PM","14PM","15PM","16PM","17PM","18PM","19PM","20PM"];
+    const tbody = document.getElementById("slots");
+
+    days.forEach(day => {
+        let row = `<tr><td><strong>${day}</strong></td>`;
+
+        timeSlots.forEach(t => {
+            const ischecked = savedslots.some(slot => slot[0] === day && slot[1] === t);
+            row += `
+                <td>
+                    <label>
+                        <input type="checkbox" name="${day}[]" value="${t}" ${ischecked ? "checked" : ""}>
+                        ${t}
+                    </label>
+                </td>
+            `;
+        });
+
+        row += `</tr>`;
+        tbody.innerHTML += row;
+    });
+</script>
+
+</body>
+</html>

@@ -23,7 +23,7 @@
             </div>
             <div class="icon">
                 <img src="{{ url_for('static',filename='icons/avail.svg')}}" alt="">
-                <a href="">Availability</a>
+                <a href="/timeslot">Availability</a>
             </div>
             <div class="icon">
                 <img src="{{ url_for('static',filename='icons/logout.svg')}}" alt="">
@@ -33,7 +33,7 @@
         <div class="view">
             <div class="welcome">
                 <div class="text">
-                    <h1>Welcome Dr. {{drname}}</h1>
+                    <h1>Welcome {{drname}}</h1>
                     <h2>Access and manage patient records, view appointments, and update medical reports.<br>Provide timely care and maintain accurate clinical information.</h2>
                 </div>
                 <img src="{{ url_for('static',filename='images/docbg.jpg')}}" alt="">

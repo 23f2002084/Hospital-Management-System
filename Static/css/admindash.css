@@ -233,6 +233,7 @@ a{
     border-top: 1px solid white;
     border-bottom: 1px solid white;
     cursor: pointer;
+    height: 80px;
 }
 
 .title > div{
@@ -292,4 +293,8 @@ button{
     background-color: #37d84c;
     height: 40px;
     color: white;
+}
+
+.timeslot table{
+    font-family: 'sfpror';
 }

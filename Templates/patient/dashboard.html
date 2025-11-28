@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient-Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admindash.css') }}">
+</head>
+<body>
+    <section class="main">
+        <div class="navbar">
+            <div class="icon">
+                <img src="{{ url_for('static',filename='icons/home.svg')}}" alt="">
+                <a href="">Home</a>
+            </div>
+            <div class="icon">
+                <img src="{{ url_for('static',filename='icons/patient.svg')}}" alt="">
+                <a href="">Departments</a>
+            </div>
+            <div class="icon">
+                <img src="{{ url_for('static',filename='icons/app.svg')}}" alt="">
+                <a href="">Appointments</a>
+            </div>
+            <div class="icon">
+                <img src="{{ url_for('static',filename='icons/avail.svg')}}" alt="">
+                <a href="/timeslot">Availability</a>
+            </div>
+            <div class="icon">
+                <img src="{{ url_for('static',filename='icons/logout.svg')}}" alt="">
+                <a href="/">Logout</a>
+            </div>
+        </div>
+        <div class="view">
+            <div class="welcome">
+                <div class="text">
+                    <h1>Welcome {{patname}}</h1>
+                    <h2>Book, reschedule, or cancel appointments and view your treatment history.<br>Stay informed with easy access to personal medical details and updates.</h2>
+                </div>
+                <img src="{{ url_for('static',filename='images/docbg.jpg')}}" alt="">
+            </div>
+            <div class="appointments">
+                <h1 id="hmm">Upcoming Appointments</h1>
+                <div class="titlee">
+                    <div class="app">
+                        <h1>Appointment ID</h1>
+                    </div>
+                    <div class="patient">
+                        <h1>Patient Name</h1>
+                    </div>
+                    <div class="stat">
+                        <h1>Status</h1>
+                    </div>
+                </div>
+                {% for i in tab%}
+                <div class="title">
+                    <div class="app">
+                        <h1>{{i[0]}}</h1>
+                    </div>
+                    <div class="patient">
+                        <h1>{{i[1]}}</h1>
+                    </div>
+                    <div class="stat" style="display: flex; justify-content: space-evenly; align-items: center; ">
+                        <button style="background-color: rgb(0, 255, 55);">Complete</button>
+                        <button style="background-color: rgb(255, 0, 0);">Cancel</button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="appointmentss" style="display: flex; justify-content: space-between; background:none;">
+                <div class="appointments" style="width: 49.70%; background-color: blueviolet; margin-top: 0px; margin-bottom: 0px;">
+                    <h1>Assigned Patients</h1>
+                    <table>
+                        <tr>
+                            <th>Patient Name</th>
+                            <th>View</th>
+                        </tr>
+                        {% for i in tab%}
+                        <tr>
+                            <td>{{i[1]}}</td>
+                        </tr>
+                        {% endfor %}
+                </table>
+                </div>
+                <div class="appointments" style="width: 49.70%; background-color: #101010; margin-top: 0px; margin-bottom: 0px;">
+                    <h1>Availability</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
