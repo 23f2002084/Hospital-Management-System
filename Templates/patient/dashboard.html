@@ -7,30 +7,30 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/admindash.css') }}">
 </head>
 <body>
-    <section class="main">
-        <div class="navbar">
+    <div class="navbar">
             <div class="icon">
                 <img src="{{ url_for('static',filename='icons/home.svg')}}" alt="">
-                <a href="">Home</a>
-            </div>
-            <div class="icon">
-                <img src="{{ url_for('static',filename='icons/patient.svg')}}" alt="">
-                <a href="">Departments</a>
+                <a href="/patient_dashboard">Home</a>
             </div>
             <div class="icon">
                 <img src="{{ url_for('static',filename='icons/app.svg')}}" alt="">
-                <a href="">Appointments</a>
+                <a href="/bookappointment">Appointments</a>
             </div>
             <div class="icon">
-                <img src="{{ url_for('static',filename='icons/avail.svg')}}" alt="">
-                <a href="/timeslot">Availability</a>
+                <img src="{{ url_for('static',filename='icons/history.svg')}}" alt="">
+                <a href="/history">History</a>
+            </div>
+            <div class="icon">
+                <img src="{{ url_for('static',filename='icons/profile.svg')}}" alt="">
+                <a href="/updatepatprofile">Profile</a>
             </div>
             <div class="icon">
                 <img src="{{ url_for('static',filename='icons/logout.svg')}}" alt="">
                 <a href="/">Logout</a>
             </div>
-        </div>
-        <div class="view">
+    </div>
+    <section class="main">
+        <div class="view" style="min-height: 92vh;">
             <div class="welcome">
                 <div class="text">
                     <h1>Welcome {{patname}}</h1>
@@ -38,17 +38,85 @@
                 </div>
                 <img src="{{ url_for('static',filename='images/docbg.jpg')}}" alt="">
             </div>
+            <div class="appointmentss" style="display: flex; justify-content: space-between; background:none;">
+                <div class="appointments" style="width: 49.70%; background-color: #101011; margin-top: 0px; margin-bottom: 0px; position: relative;">
+                    <h1 style="position: absolute; top: 15px; left: 15px;">Available Department</h1>
+                    <table style="width: 95%; height: 75%; margin-top: 40px; margin-left: 30px;">
+                        {% for i in depttab %}
+                        {% set dept_name = i[0].strip().upper() %}
+                        <tr>
+                            <td>{{ dept_name }}</td>
+                            <td style="display: flex; justify-content: center; align-items: center;">
+                                <button popovertarget="popover{{ loop.index }}">View</button>
+                                <div id="popover{{ loop.index }}" class="mypopover" popover>
+                                    <h3 style="color: black;">{{ dept_name }}</h3>
+                                    <h4 style="color: black; padding-top: 30px;">Available Doctors</h4>
+                                    {% set doctors = docdict.get(dept_name, []) %}
+                                    {% if doctors %}
+                                        <ul>
+                                            {% for doc in doctors %}
+                                                <li style="color: black;">{{ doc }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% else %}
+                                        <p style="color: gray;">No doctors available</p>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                <div class="appointments" style="width: 49.70%; background-color: #101011; margin-top: 0px; margin-bottom: 0px; position: relative;">
+                    <h1 style="position: absolute; top: 15px; left: 15px;">Available Doctors</h1>
+                    <form class="searchbar" method="get" action="{{ url_for('doctor_dashboard') }}" style="display:flex; gap:8px; align-items:center;">
+                            <input type="search" name="name" placeholder="Search by name or department" value="{{ search|default('') }}" />
+                            <button type="submit" style="padding:6px 10px;">Search</button>
+                            {% if search %}
+                                <a href="{{ url_for('doctor_dashboard') }}" style="margin-left:8px; text-decoration:none; color:#333;">Clear</a>
+                            {% endif %}
+                    </form>
+                    <table style="width: 95%; margin-top: 40px; margin-left: 50px;">
+                        {% for i in doctab %}
+                        {% set docname = i[0] %}
+                        <tr>
+                            <td class="docname">{{ docname }}</td>
+                            <td class="viewbut">
+                                <button popovertarget="pdoc{{ loop.index }}">View</button>
+                                <div id="pdoc{{ loop.index }}" class="mypopover" popover>
+                                    <h3 style="color: black;">{{ docname }}</h3>
+                                    <h4 style="color: black;">Available Timings</h4>
+                                    {% set time = timings.get(docname, []) %}
+                                    {% if time %}
+                                        <ul>
+                                        {% for t in time %}
+                                            <li style="color: black;">{{ t }}</li>
+                                        {% endfor %}
+                                        </ul>
+                                    {% else %}
+                                        <p style="color: gray;">No timings available</p>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>              
+            </div>
             <div class="appointments">
                 <h1 id="hmm">Upcoming Appointments</h1>
                 <div class="titlee">
                     <div class="app">
-                        <h1>Appointment ID</h1>
+                        <h1>Doctor Name</h1>
                     </div>
                     <div class="patient">
-                        <h1>Patient Name</h1>
+                        <h1>Appointment Time</h1>
                     </div>
                     <div class="stat">
-                        <h1>Status</h1>
+                        <h1>Appointment Date</h1>
+                    </div>
+                    <div class="stat">
+                        <h1>Actions</h1>
                     </div>
                 </div>
                 {% for i in tab%}
@@ -59,31 +127,15 @@
                     <div class="patient">
                         <h1>{{i[1]}}</h1>
                     </div>
+                    <div class="patient">
+                        <h1>{{i[2]}}</h1>
+                    </div>
                     <div class="stat" style="display: flex; justify-content: space-evenly; align-items: center; ">
-                        <button style="background-color: rgb(0, 255, 55);">Complete</button>
+                        <button style="background-color: rgb(0, 255, 55);">Reschedule</button>
                         <button style="background-color: rgb(255, 0, 0);">Cancel</button>
                     </div>
                 </div>
                 {% endfor %}
-            </div>
-            <div class="appointmentss" style="display: flex; justify-content: space-between; background:none;">
-                <div class="appointments" style="width: 49.70%; background-color: blueviolet; margin-top: 0px; margin-bottom: 0px;">
-                    <h1>Assigned Patients</h1>
-                    <table>
-                        <tr>
-                            <th>Patient Name</th>
-                            <th>View</th>
-                        </tr>
-                        {% for i in tab%}
-                        <tr>
-                            <td>{{i[1]}}</td>
-                        </tr>
-                        {% endfor %}
-                </table>
-                </div>
-                <div class="appointments" style="width: 49.70%; background-color: #101010; margin-top: 0px; margin-bottom: 0px;">
-                    <h1>Availability</h1>
-                </div>
             </div>
         </div>
     </section>

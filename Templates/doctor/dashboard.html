@@ -7,8 +7,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/admindash.css') }}">
 </head>
 <body>
-    <section class="main">
-        <div class="navbar">
+    <div class="navbar">
             <div class="icon">
                 <img src="{{ url_for('static',filename='icons/home.svg')}}" alt="">
                 <a href="">Home</a>
@@ -16,10 +15,6 @@
             <div class="icon">
                 <img src="{{ url_for('static',filename='icons/patient.svg')}}" alt="">
                 <a href="">Patients</a>
-            </div>
-            <div class="icon">
-                <img src="{{ url_for('static',filename='icons/app.svg')}}" alt="">
-                <a href="">Appointments</a>
             </div>
             <div class="icon">
                 <img src="{{ url_for('static',filename='icons/avail.svg')}}" alt="">
@@ -30,6 +25,7 @@
                 <a href="/">Logout</a>
             </div>
         </div>
+    <section class="main">
         <div class="view">
             <div class="welcome">
                 <div class="text">
@@ -47,8 +43,14 @@
                     <div class="patient">
                         <h1>Patient Name</h1>
                     </div>
+                    <div class="patient">
+                        <h1>Appointment Date</h1>
+                    </div>
+                    <div class="patient">
+                        <h1>Appointment Time</h1>
+                    </div>
                     <div class="stat">
-                        <h1>Status</h1>
+                        <h1>Actions</h1>
                     </div>
                 </div>
                 {% for i in tab%}
@@ -59,31 +61,49 @@
                     <div class="patient">
                         <h1>{{i[1]}}</h1>
                     </div>
+                    <div class="patient">
+                        <h1>{{i[2]}}</h1>
+                    </div>
+                    <div class="patient">
+                        <h1>{{i[3]}}</h1>
+                    </div>
                     <div class="stat" style="display: flex; justify-content: space-evenly; align-items: center; ">
-                        <button style="background-color: rgb(0, 255, 55);">Complete</button>
-                        <button style="background-color: rgb(255, 0, 0);">Cancel</button>
+                        <form action="{{url_for('treatment')}}" method="POST">
+                            <input type="hidden" name="patient_name" value="{{i[1]}}">
+                            <input type="hidden" name="appointment_id" value="{{i[0]}}">
+                            <button type="submit" style="background-color: rgb(0, 255, 55);">Complete</button>
+                        </form>
+                        <form action="{{url_for('cancelapp',app_id=i[0])}}" method="post">
+                            <button type="submit" style="background-color: rgb(216, 51, 51);">Cancel</button>
+                        </form>
                     </div>
                 </div>
                 {% endfor %}
             </div>
             <div class="appointmentss" style="display: flex; justify-content: space-between; background:none;">
-                <div class="appointments" style="width: 49.70%; background-color: blueviolet; margin-top: 0px; margin-bottom: 0px;">
-                    <h1>Assigned Patients</h1>
-                    <table>
-                        <tr>
-                            <th>Patient Name</th>
-                            <th>View</th>
-                        </tr>
-                        {% for i in tab%}
-                        <tr>
-                            <td>{{i[1]}}</td>
-                        </tr>
-                        {% endfor %}
-                </table>
+                <div class="appointments" style="width: 100%; background-color: blueviolet; margin-top: 0px; margin-bottom: 0px; position: relative;">
+                    <h1 style="position: absolute; top: 20px; left: 20px;">Assigned Patients</h1>
+                    <div class="titlee">
+                    <div class="patient">
+                        <h1>Patient Name</h1>
+                    </div>
+                    <div class="stat">
+                        <h1>Actions</h1>
+                    </div>
                 </div>
-                <div class="appointments" style="width: 49.70%; background-color: #101010; margin-top: 0px; margin-bottom: 0px;">
-                    <h1>Availability</h1>
+                {% for i in tab%}
+                <div class="title">
+                    <div class="patient" style="display: flex; align-items: center; justify-content: center;">
+                        <h1>{{i[1]}}</h1>
+                    </div>
+                    <div class="patient" style="text-align: center; display: flex; align-items: center; justify-content: center;">
+                        <button popovertarget="mypopover">History</button>
+                        <div id="mypopover" popover style="width: 500px; height: auto; border: none;">
+                            <h1 style="color: black;">{{i[1]}}'s History</h1>
+                        </div>
+                    </div>
                 </div>
+                {% endfor %}
             </div>
         </div>
     </section>

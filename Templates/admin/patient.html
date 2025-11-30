@@ -7,8 +7,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/admindash.css') }}">
 </head>
 <body>
-    <section class="main">
-        <div class="navbar" style="padding-top: 250px;">
+    <div class="navbar">
             <div class="icon">
                 <img src="{{ url_for('static',filename='icons/home.svg')}}" alt="">
                 <a href="/admin_dashboard">Home</a>
@@ -30,6 +29,7 @@
                 <a href="/">Logout</a>
             </div>
         </div>
+    <section class="main">
         <div class="view" style="height: 96vh;">
             <div class="appointments">
                 <h1 id="hmm">Patient List</h1>
@@ -98,7 +98,7 @@
                         <a href="{{ url_for('editpat', patient_id=i[0]) }}" style="text-decoration:none;">
                             <button style="background-color: #37d84c;">Edit</button>
                         </a>
-                        {% if i[2] == 'Blacklist' %}
+                        {% if i[8] == 'Blacklist' %}
                                 <form action="{{url_for('unbanpat',patient_id=i[0])}}" method="post">
                                     <button type="submit" style="background-color: rgb(255, 255, 255);">Revert</button>
                                 </form>

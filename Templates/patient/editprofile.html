@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admindash.css') }}">
+    <style>
+        .appointments h1{
+            color: white;
+        }
+        .forms{
+             width: 500px;
+             margin:34px;
+             border-radius:6px;
+        }
+        form{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 2em;
+        }
+        .rows { 
+            width: 400px;
+        }
+        label { display:block; margin-bottom:6px }
+        input, select { 
+            width:100%;
+            height: 40px;
+            border-radius: 8px;
+            border: none;
+            padding-left: 10px;
+        }
+        select{
+            width: 410px;
+        }
+        button { 
+            padding:8px 12px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <section class="main" style="margin-top: 0px;">
+        <div class="appointments" style="width: 90%; margin: auto; margin-top: 30px;">
+            <h1>Edit Patient</h1>
+
+            <form method="post" action="{{ url_for('editpatprofile', patient_id=patient[0]) }}">
+                
+                <label>Patient Name</label>
+                <input name="patient_name" value="{{patient[1]}}">
+
+                <label>Age</label>
+                <input name="age" value="{{patient[2]}}">
+
+                <label>Gender</label>
+                <input name="gender" value="{{patient[3]}}">
+
+                <label>Address</label>
+                <input name="address" value="{{patient[4]}}">
+
+                <label>Contact</label>
+                <input name="contact" value="{{patient[5]}}">
+
+                <label>Blood Group</label>
+                <input name="blood" value="{{patient[6]}}">
+
+                <label>Allergies</label>
+                <input name="allergies" value="{{patient[7]}}">
+
+                <div style="margin-top: 15px;">
+                    <button type="submit" style="background: green; color: white;">Save</button>
+                    <a href="{{ url_for('updatepatprofile') }}"><button type="button">Cancel</button></a>
+                </div>
+            </form>
+        </div>
+    </section>
+</body>
+</html>

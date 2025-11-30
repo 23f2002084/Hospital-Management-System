@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient-Book Appointment</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admindash.css') }}">
+</head>
+<body>
+    <div class="navbar">
+            <div class="icon">
+                <img src="{{ url_for('static',filename='icons/home.svg')}}" alt="">
+                <a href="/patient_dashboard">Home</a>
+            </div>
+            <div class="icon">
+                <img src="{{ url_for('static',filename='icons/app.svg')}}" alt="">
+                <a href="/bookappointment">Appointments</a>
+            </div>
+            <div class="icon">
+                <img src="{{ url_for('static',filename='icons/history.svg')}}" alt="">
+                <a href="/history">History</a>
+            </div>
+            <div class="icon">
+                <img src="{{ url_for('static',filename='icons/profile.svg')}}" alt="">
+                <a href="">Profile</a>
+            </div>
+            <div class="icon">
+                <img src="{{ url_for('static',filename='icons/logout.svg')}}" alt="">
+                <a href="/">Logout</a>
+            </div>
+    </div>
+    <section class="main">
+<div class="view" style="min-height: 100vh;">
+
+    {% if profiledet[8] == 'Blacklist' %}
+        <h2>You're Blacklisted</h2>
+        <h2>You can't book an appointment</h2>
+
+    {% else %}
+        <form method="POST" action="/bookappointment">
+            <label>Select Department</label>
+            <select name="dept_name" required>
+                <option disabled selected>Select Department</option>
+                {% for d in depttab %}
+                    <option value="{{ d[0] }}">{{ d[0] }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit">Next</button>
+        </form>
+        <form method="POST" action="/bookappointment">
+            <label>Select Doctor</label>
+            <select name="doc_name" required>
+                <option disabled selected>Select Doctor</option>
+                {% for d in docnames %}
+                    <option value="{{ d[0] }}">{{ d[0] }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit">Next</button>
+        </form>
+        <form method="POST" action="/bookappointment">
+            <label>Select Time</label>
+            <select name="doc_time" required>
+                <option disabled selected>Select Time</option>
+                {% for d in doctimes %}
+                    <option value="{{ d[0] }},{{d[1]}}">{{ d[0] }} {{d[1]}}</option>
+                {% endfor %}
+            </select>
+            <button type="submit">Next</button>
+        </form>
+
+    {% endif %}
+
+</div>
+</section>
+</body>
+</html>

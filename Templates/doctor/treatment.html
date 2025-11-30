@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admindash.css') }}">
+    <style>
+        .appointments h1{
+            color: white;
+        }
+        .forms{
+             width: 500px;
+             margin:34px;
+             border-radius:6px;
+        }
+        form{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 2em;
+        }
+        .rows { 
+            width: 400px;
+        }
+        label { display:block; margin-bottom:6px }
+        input { 
+            width:100%;
+            height: 40px;
+            border-radius: 8px;
+            border: none;
+            padding-left: 10px;
+        }
+        button { 
+            padding:8px 12px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <section class="main">
+        <div class="viewww">
+            <div class="appointments" style="height: 100%; margin-bottom: 8px; width: 98%;">
+                <h1>Add Details</h1>
+                <div class="forms">
+                    <form method="post" action="{{ url_for('treatment') }}">
+                        <div class="rows">
+                            <label for="patient_name">Appointment ID</label>
+                            <input id="appointment_id" name="appointment_id" required value="{{appointment_id}}" style="color: black;"/>
+                        </div>
+                        <div class="rows">
+                            <label for="patient_name">Patient Name</label>
+                            <input id="patient_name" name="patient_name" required value="{{patient_name}}" style="color: black;"/>
+                        </div>
+                        <div class="rows">
+                            <label for="diagnosis">Diagnosis</label>
+                            <input id="diagnosis" name="diagnosis" required />
+                        </div>
+                        <div class="rows">
+                            <label for="treatment">Treatment</label>
+                            <input id="treatment" name="treatment" required />
+                        </div>
+                        <div class="rows">
+                            <label for="presc">Prescription</label>
+                            <input id="presc" name="presc" required />
+                        </div>
+                        <div style="display:flex; gap:8px;">
+                            <button type="submit" style="background:#4CAF50; color:#fff; border:none;">Submit</button>
+                            <a href="{{ url_for('doctor_dashboard') }}"><button type="button">Cancel</button></a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

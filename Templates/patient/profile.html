@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient-Profile</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admindash.css') }}">
+</head>
+<body>
+    <div class="navbar">
+            <div class="icon">
+                <img src="{{ url_for('static',filename='icons/home.svg')}}" alt="">
+                <a href="/patient_dashboard">Home</a>
+            </div>
+            <div class="icon">
+                <img src="{{ url_for('static',filename='icons/app.svg')}}" alt="">
+                <a href="/bookappointment">Appointments</a>
+            </div>
+            <div class="icon">
+                <img src="{{ url_for('static',filename='icons/history.svg')}}" alt="">
+                <a href="/history">History</a>
+            </div>
+            <div class="icon">
+                <img src="{{ url_for('static',filename='icons/profile.svg')}}" alt="">
+                <a href="">Profile</a>
+            </div>
+            <div class="icon">
+                <img src="{{ url_for('static',filename='icons/logout.svg')}}" alt="">
+                <a href="/">Logout</a>
+            </div>
+    </div>
+    <section class="main">
+        <div class="view" style="height: 100vh; gap: 1em;">
+            <h1 style="color: white; margin-top: 20px;">Profile Details</h1>
+            {% if none in profiledet %}
+            <a href="{{ url_for('editpatprofile', patient_id=profiledet[0]) }}" style="text-decoration:none;">
+                        <button class="add" type="button">Complete Profile</button>
+            </a>
+            {% else %}
+            <a href="{{ url_for('editpatprofile', patient_id=profiledet[0]) }}" style="text-decoration:none;">
+                        <button class="add" type="button">Edit Profile</button>
+            </a>
+            {% endif %}
+            <div class="details" style="margin-top: 30px;">
+                <div class="hmmt">
+                    <h1>ID</h1>
+                </div>
+                <div class="val">
+                    <h1>: {{profiledet[0]}}</h1>
+                </div>
+            </div>
+            <div class="details">
+                <div class="hmmt">
+                    <h1>Name</h1>
+                </div>
+                <div class="val">
+                    <h1>: {{profiledet[1]}}</h1>
+                </div>
+            </div>
+            <div class="details">
+                <div class="hmmt">
+                    <h1>Age</h1>
+                </div>
+                <div class="val">
+                    <h1>: {{profiledet[2]}}</h1>
+                </div>
+            </div>
+            <div class="details">
+                <div class="hmmt">
+                    <h1>Gender</h1>
+                </div>
+                <div class="val">
+                    <h1>: {{profiledet[3]}}</h1>
+                </div>
+            </div>
+            <div class="details">
+                <div class="hmmt">
+                    <h1>Address</h1>
+                </div>
+                <div class="val">
+                    <h1>: {{profiledet[4]}}</h1>
+                </div>
+            </div>
+            <div class="details">
+                <div class="hmmt">
+                    <h1>Contact</h1>
+                </div>
+                <div class="val">
+                    <h1>: {{profiledet[5]}}</h1>
+                </div>
+            </div>
+            <div class="details">
+                <div class="hmmt">
+                    <h1>Blood Grp</h1>
+                </div>
+                <div class="val">
+                    <h1>: {{profiledet[6]}}</h1>
+                </div>
+            </div>
+            <div class="details">
+                <div class="hmmt">
+                    <h1>Allergies</h1>
+                </div>
+                <div class="val">
+                    <h1>: {{profiledet[7]}}</h1>
+                </div>
+            </div>
+            <div class="details">
+                <div class="hmmt">
+                    <h1>State</h1>
+                </div>
+                <div class="val">
+                    <h1>: {{profiledet[8]}}</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

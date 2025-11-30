@@ -3,26 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin-Patients</title>
+    <title>Patient-Dashboard</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/admindash.css') }}">
 </head>
 <body>
     <div class="navbar">
             <div class="icon">
                 <img src="{{ url_for('static',filename='icons/home.svg')}}" alt="">
-                <a href="/admin_dashboard">Home</a>
-            </div>
-            <div class="icon">
-                <img src="{{ url_for('static',filename='icons/doc.svg')}}" alt="">
-                <a href="/doctor_list">Doctors</a>
-            </div>
-            <div class="icon">
-                <img src="{{ url_for('static',filename='icons/patient.svg')}}" alt="">
-                <a href="/patient_list">Patients</a>
+                <a href="/patient_dashboard">Home</a>
             </div>
             <div class="icon">
                 <img src="{{ url_for('static',filename='icons/app.svg')}}" alt="">
-                <a href="/appointment_list">Appointments</a>
+                <a href="/bookappointment">Appointments</a>
+            </div>
+            <div class="icon">
+                <img src="{{ url_for('static',filename='icons/history.svg')}}" alt="">
+                <a href="/history">History</a>
+            </div>
+            <div class="icon">
+                <img src="{{ url_for('static',filename='icons/profile.svg')}}" alt="">
+                <a href="/updatepatprofile">Profile</a>
             </div>
             <div class="icon">
                 <img src="{{ url_for('static',filename='icons/logout.svg')}}" alt="">
@@ -30,37 +30,27 @@
             </div>
     </div>
     <section class="main">
-        <div class="view" style="height: 96vh;">
+        <div class="view" style="min-height: 92vh;">
             <div class="appointments">
-                <h1 id="hmm">Appointments List</h1>
-                <form class="searchbar" method="get" action="{{ url_for('appointment_list') }}">
-                    <input type="search" name="name" placeholder="Search by patient name" value="{{ search|default('') }}"/>
-                    <button type="submit" style="padding:6px 10px;">Search</button>
-                    {% if search %}
-                        <a href="{{ url_for('appointment_list') }}" style="margin-left:8px; text-decoration:none; color:#333;">Clear</a>
-                    {% endif %}
-                </form>
+                <h1 id="hmm">History</h1>
                 <div class="titlee">
                     <div class="app">
-                        <h1>Appointment ID</h1>
-                    </div>
-                    <div class="patient">
-                        <h1>Patient Name</h1>
+                        <h1>Treatment ID</h1>
                     </div>
                     <div class="patient">
                         <h1>Doctor Name</h1>
                     </div>
-                    <div class="patient">
-                        <h1>Appointment Date</h1>
+                    <div class="stat">
+                        <h1>Diagnosis</h1>
                     </div>
-                    <div class="patient">
-                        <h1>Appointment Time</h1>
+                    <div class="stat">
+                        <h1>Treatment</h1>
                     </div>
-                    <div class="patient">
-                        <h1>Status</h1>
+                    <div class="stat">
+                        <h1>Prescription</h1>
                     </div>
                 </div>
-                {% for i in apptab%}
+                {% for i in his%}
                 <div class="title">
                     <div class="app">
                         <h1>{{i[0]}}</h1>
@@ -76,9 +66,6 @@
                     </div>
                     <div class="patient">
                         <h1>{{i[4]}}</h1>
-                    </div>
-                    <div class="patient">
-                        <h1>{{i[5]}}</h1>
                     </div>
                 </div>
                 {% endfor %}

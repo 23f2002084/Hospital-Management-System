@@ -27,19 +27,34 @@
     src: url(../fonts/sf-pro-display/SFPRODISPLAYBLACKITALIC.OTF);
 }
 
+body{
+    background-color: #202021;
+}
+
 .main{
     width: 100%;
     min-height: 100vh;
     background-color: #101010;
-    display: flex;
-    align-items: center;
+    margin-top: 90px;
 }
 
 .navbar{
-    width: 200px;
-    height: 125vh;
+    width: auto;
+    height: 50px;
     background-color: #101010;
+    border-radius: 25px;
+    border: 1px solid grey;
     position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    top: 20px;
+    left: 50%;
+    transform: translate(-50%);
+    z-index: 99999;
+    gap: 1.5em;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 .navbar h1,
@@ -53,10 +68,16 @@ a{
 .icon{
     display: flex;
     align-items: center;
-    margin-top: 40px;
     gap: 1em;
-    padding-left: 20px;
-    padding-top: 10px;
+    height: 40px;
+    border-radius: 25px;
+    padding-left: 5px;
+    padding-right: 5px;
+    cursor: pointer;
+}
+
+.icon:hover{
+        background-color: #313131;
 }
 
 .icon img{
@@ -65,29 +86,22 @@ a{
 
 
 .view{
-    width: calc(99% - 200px);
-    margin-top: 20px;
-    margin-bottom: 20px;
+    width:100%;
     background-color: #202021;
-    border-radius: 20px;
-    margin-left: 200px;
     overflow-y: scroll;
     overflow-x: hidden;
     scrollbar-width: none;
     display: flex;
     align-items: center;
     flex-direction: column;
+    font-family: 'sfpror';
 }
+
 
 .viewww{
     width: 100%;
-    margin-left: 10px;
-    margin-right: 10px;
-    min-height: 90vh;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    min-height: 100vh;
     background-color: #202021;
-    border-radius: 20px;
     overflow-y: scroll;
     overflow-x: hidden;
     scrollbar-width: none;
@@ -135,7 +149,12 @@ a{
     width: 99%;
     display: flex;
     justify-content: space-between;
-    margin-top: 25px;
+    margin-top: 8px;
+    gap: 0.5em;
+}
+
+.boxes > div{
+    flex:1;
 }
 
 .boxes h1,h2{
@@ -146,11 +165,10 @@ a{
 }
 
 .box{
-    width: 265px;
     height: 180px;
     background-color: #f55a00;
     background-color: #5672c2;
-    border-radius: 15px;
+    border-radius: 20px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -228,6 +246,7 @@ a{
 
 .title{
     width: 98%;
+    height: auto;
     display: flex;
     justify-content: space-between;
     border-top: 1px solid white;
@@ -297,4 +316,56 @@ button{
 
 .timeslot table{
     font-family: 'sfpror';
+}
+
+table{
+    font-family: 'sfpror';
+    color: white;
+}
+
+.docname,
+.viewbut{
+    height: 42px;
+}
+
+.viewbut{
+    padding-left: 300px;
+}
+
+.mypopover{
+    height: auto;
+    width: 500px;
+    background-color: white;
+    border-radius: 20px;
+    border: black 1px solid;
+    padding-left: 20px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-53%);
+    max-height: none;
+    overflow: visible;
+    font-family: 'sfpror';
+}
+
+.mypopover::backdrop{
+    background-color: #202021;
+    opacity: 70%;
+}
+
+.details{
+    display: flex;
+    color: white;
+    width: 240px;
+    font-size: 10px;
+}
+
+.hmmt{
+    width: 100px;
+}
+
+.val{
+    width: 140px;
 }

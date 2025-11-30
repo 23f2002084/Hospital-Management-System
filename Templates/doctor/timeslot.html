@@ -3,12 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- Prevent cache so it always reloads fresh from DB -->
     <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-
     <title>Doctor-Dashboard</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/admindash.css') }}">
     <style>
@@ -28,8 +25,7 @@
     </style>
 </head>
 <body>
-    <section class="main">
-        <div class="navbar" style="margin-top: 300px;">
+    <div class="navbar">
             <div class="icon">
                 <img src="{{ url_for('static',filename='icons/home.svg')}}" alt="">
                 <a href="/doctor_dashboard">Home</a>
@@ -51,7 +47,7 @@
                 <a href="/">Logout</a>
             </div>
         </div>
-
+    <section class="main">
         <div class="view">
             <div class="timeslot">
                 <form action="/saveslots" method="POST">

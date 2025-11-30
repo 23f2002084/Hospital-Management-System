@@ -7,8 +7,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/admindash.css') }}">
 </head>
 <body>
-    <section class="main">
-        <div class="navbar" style="padding-top: 250px;">
+    <div class="navbar">
             <div class="icon">
                 <img src="{{ url_for('static',filename='icons/home.svg')}}" alt="">
                 <a href="/admin_dashboard">Home</a>
@@ -30,12 +29,13 @@
                 <a href="/">Logout</a>
             </div>
         </div>
+    <section class="main">
         <div class="view" style="height: 96vh;">
             <div class="appointments">
                 <h1 id="hmm">Doctors List</h1>
                     <div style="display:flex; gap:12px; align-items:center;">
                         <form class="searchbar" method="get" action="{{ url_for('doctor_list') }}" style="display:flex; gap:8px; align-items:center;">
-                            <input type="search" name="name" placeholder="Search by name" value="{{ search|default('') }}" />
+                            <input type="search" name="name" placeholder="Search by name or department" value="{{ search|default('') }}" />
                             <button type="submit" style="padding:6px 10px;">Search</button>
                             {% if search %}
                                 <a href="{{ url_for('doctor_list') }}" style="margin-left:8px; text-decoration:none; color:#333;">Clear</a>
@@ -77,18 +77,21 @@
                         <h1>{{i[3]}}</h1>
                     </div>
                     <div class="stat" style="display: flex; justify-content: space-evenly; align-items: center; ">
-                                <a href="{{ url_for('editdoc', doc_id=i[0]) }}" style="text-decoration:none;">
-                                    <button style="background-color: #37d84c;">Edit</button>
-                                </a>
-                                {% if i[3] == 'Blacklist' %}
-                                    <form action="{{url_for('unbandoc',doc_id=i[0])}}" method="post">
-                                        <button type="submit" style="background-color: rgb(255, 255, 255);">Revert</button>
-                                    </form>
-                                {% else %}
-                                    <form action="{{url_for('blacklistdoc',doc_id=i[0])}}" method="post">
-                                        <button type="submit" style="background-color: rgb(255, 255, 255);">Blacklist</button>
-                                    </form>
-                                {% endif %}
+                        <a href="{{ url_for('editdoc', doc_id=i[0]) }}" style="text-decoration:none;">
+                            <button style="background-color: #37d84c;">Edit</button>
+                        </a>
+                        {% if i[3] == 'Blacklist' %}
+                            <form action="{{url_for('unbandoc',doc_id=i[0])}}" method="post">
+                                <button type="submit" style="background-color: rgb(255, 255, 255);">Revert</button>
+                            </form>
+                        {% else %}
+                            <form action="{{url_for('blacklistdoc',doc_id=i[0])}}" method="post">
+                                <button type="submit" style="background-color: rgb(255, 255, 255);">Blacklist</button>
+                            </form>
+                        {% endif %}
+                        <form action="{{url_for('deletedoc',doc_id=i[0])}}" method="post">
+                                <button type="submit" style="background-color: rgb(216, 51, 51);">Delete</button>
+                        </form>
                     </div>
                 </div>
                 {% endfor %}

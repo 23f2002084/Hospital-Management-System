@@ -72,6 +72,17 @@ def dbinit():
                 FOREIGN KEY (DOC_NAME) REFERENCES DOCTORS (DOC_NAME)
                 )''')
     con.commit()
+    cur.execute('''CREATE TABLE IF NOT EXISTS TREATMENTS(
+                TREATMENT_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                PATIENT_NAME TEXT,
+                DOC_NAME TEXT,
+                DIAGNOSIS TEXT,
+                TREATMENT TEXT,
+                PRESCRIPTION TEXT,
+                FOREIGN KEY (DOC_NAME) REFERENCES DOCTORS (DOC_NAME)
+                FOREIGN KEY (PATIENT_NAME) REFERENCES PATIENTS (PATIENTS_NAME)
+                )''')
+    con.commit()
     con.close()
 
 
@@ -174,13 +185,43 @@ def login():
 @app.route('/admin_dashboard')
 def admin_dashboard():
     doctor,user,dept,pat,app=count()
-    tab=admintabledata()
-    return render_template("admin/dashboard.html",doctor=doctor,user=user,dept=dept,pat=pat,app=app,tab=tab)
+    con = sqlite3.connect(database)
+    cur = con.cursor()
+    cur.execute("SELECT APPOINTMENT_ID, PATIENT_NAME, DOC_NAME, APPOINTMENT_DATE, APPOINTMENT_TIME FROM APPOINTMENTS WHERE STATUS='Booked'")
+    appdata=cur.fetchall()
+    return render_template("admin/dashboard.html",doctor=doctor,user=user,dept=dept,pat=pat,app=app,appdata=appdata)
 
 @app.route('/patient_dashboard')
 def patient_dashboard():
     uname = session.get('username')
-    return render_template("patient/dashboard.html",patname=uname)
+    con = sqlite3.connect(database)
+    cur = con.cursor()
+    cur.execute("SELECT PATIENT_NAME FROM PATIENTS WHERE PATIENT_NAME LIKE ?", (f"%{uname}%",))
+    name=cur.fetchone()
+    patname=name[0]
+    cur.execute("SELECT DEPT_NAME FROM DEPARTMENTS")
+    depttab=cur.fetchall()
+    cur.execute("SELECT DISTINCT DOC_NAME FROM DOC_AVAILABILITY")
+    doctab=cur.fetchall()
+    docdict={}
+    cur.execute("SELECT DEPT_NAME, DOC_NAME FROM DOCTORS")
+    res = cur.fetchall()
+    for dept, doc in res:
+        dept = dept.strip().upper()
+        if dept not in docdict:
+            docdict[dept]=[]
+        docdict[dept].append(doc)
+    timings={}
+    cur.execute("SELECT DOC_NAME, DAY, TIME, AVAILABILITY FROM DOC_AVAILABILITY")
+    res = cur.fetchall()
+    for doc, day, time, avail in res:
+        if doc not in timings:
+            timings[doc] = []
+        timings[doc].append(f"{day} : {time} → {avail}")
+    print("TIMINGS:", repr(timings))
+    cur.execute("SELECT DOC_NAME, APPOINTMENT_TIME, APPOINTMENT_DATE FROM APPOINTMENTS WHERE PATIENT_NAME LIKE ?",(f"%{uname}%",))
+    tab=cur.fetchall()
+    return render_template("patient/dashboard.html",patname=patname,depttab=depttab,doctab=doctab,docdict=docdict,timings=timings,tab=tab)
 
 @app.route('/doctor_dashboard')
 def doctor_dashboard():
@@ -191,7 +232,8 @@ def doctor_dashboard():
     cur.execute('SELECT DOC_ID, DOC_NAME FROM DOCTORS WHERE DOC_NAME LIKE ?', (f"%{uname}%",))
     res = cur.fetchone() 
     docid, drname = res[0], res[1]
-    tab=tabledata(drname)
+    cur.execute("SELECT APPOINTMENT_ID, PATIENT_NAME, APPOINTMENT_DATE, APPOINTMENT_TIME FROM APPOINTMENTS WHERE DOC_NAME=? AND STATUS='Booked'",(drname,))
+    tab=cur.fetchall()
     return render_template("doctor/dashboard.html",drname=drname,tab=tab)
 
 @app.route('/patient_list')
@@ -200,7 +242,7 @@ def patient_list():
     con=sqlite3.connect(database)
     cur=con.cursor()
     if name:
-        cur.execute("SELECT * FROM PATIENTS WHERE PATIENT_NAME LIKE ?", ('%'+name+'%',))
+        cur.execute("SELECT * FROM PATIENTS WHERE PATIENT_NAME LIKE ? OR CONTACT LIKE ? OR PATIENT_ID LIKE ?", ('%'+name+'%','%'+name+'%','%'+name+'%'))
     else:
         cur.execute("SELECT * FROM PATIENTS")
     patienttab = cur.fetchall()
@@ -209,16 +251,18 @@ def patient_list():
 
 @app.route('/doctor_list')
 def doctor_list():
+    uname = session.get('username')
     name = request.args.get('name', '').strip()
     con=sqlite3.connect(database)
     cur=con.cursor()
     if name:
-        cur.execute("SELECT DOC_ID,DEPT_NAME,DOC_NAME, STATE FROM DOCTORS WHERE DOC_NAME LIKE ?", ('%'+name+'%',))
+        cur.execute("SELECT DOC_ID,DEPT_NAME,DOC_NAME, STATE FROM DOCTORS WHERE DOC_NAME LIKE ? OR DEPT_NAME LIKE ?", ('%'+name+'%', '%'+name+'%'))
     else:
         cur.execute("SELECT DOC_ID,DEPT_NAME,DOC_NAME, STATE FROM DOCTORS")
     doctab = cur.fetchall()
     con.close()
     return render_template("admin/doctor.html",doctab=doctab, search=name)
+        
 
 @app.route('/appointment_list')
 def appointment_list():
@@ -226,9 +270,9 @@ def appointment_list():
     con=sqlite3.connect(database)
     cur=con.cursor()
     if name:
-        cur.execute("SELECT APPOINTMENT_ID,PATIENT_NAME,DOC_NAME,APPOINTMENT_DATE,APPOINTMENT_TIME FROM APPOINTMENTS WHERE PATIENT_NAME LIKE ?", ('%'+name+'%',))
+        cur.execute("SELECT APPOINTMENT_ID,PATIENT_NAME,DOC_NAME,APPOINTMENT_DATE,APPOINTMENT_TIME, STATUS FROM APPOINTMENTS GROUP BY STATUS ORDER BY STATUS WHERE PATIENT_NAME LIKE ?", ('%'+name+'%',))
     else:
-        cur.execute("SELECT APPOINTMENT_ID,PATIENT_NAME,DOC_NAME,APPOINTMENT_DATE,APPOINTMENT_TIME FROM APPOINTMENTS")
+        cur.execute("SELECT APPOINTMENT_ID,PATIENT_NAME,DOC_NAME,APPOINTMENT_DATE,APPOINTMENT_TIME, STATUS FROM APPOINTMENTS GROUP BY STATUS ORDER BY STATUS")
     apptab = cur.fetchall()
     con.close()
     return render_template("admin/appointments.html",apptab=apptab, search=name)
@@ -298,6 +342,15 @@ def blacklistdoc(doc_id):
     con = sqlite3.connect(database)
     cur = con.cursor()
     cur.execute("UPDATE DOCTORS SET STATE ='Blacklist' WHERE DOC_ID = ?",(doc_id,))
+    con.commit()
+    con.close()
+    return redirect(url_for('doctor_list'))
+
+@app.route('/deletedoc/<int:doc_id>', methods=['POST'])
+def deletedoc(doc_id):
+    con = sqlite3.connect(database)
+    cur = con.cursor()
+    cur.execute("DELETE FROM DOCTORS WHERE DOC_ID=?",(doc_id,))
     con.commit()
     con.close()
     return redirect(url_for('doctor_list'))
@@ -414,6 +467,164 @@ def saveslots():
     con.commit()
     con.close()
     return redirect(url_for('timeslot'))
+
+@app.route('/bookappointment', methods=['POST','GET'])
+def bookappointment():
+    uname = session.get('username')
+    con = sqlite3.connect(database)
+    cur = con.cursor()
+    cur.execute('SELECT * FROM PATIENTS WHERE PATIENT_NAME LIKE ?', (f"%{uname}%",))
+    res = cur.fetchone()
+    cur.execute("SELECT DEPT_NAME FROM DEPARTMENTS")
+    depttab = cur.fetchall()
+    pid=res[0]
+    pname=res[1]
+    selected_day=""
+    selected_time=""
+    if request.method=="POST" and request.form.get("dept_name"):
+        dept_name = request.form.get("dept_name")
+        cur.execute("SELECT DOC_NAME FROM DOCTORS WHERE DEPT_NAME = ? AND STATE='Active'", (dept_name,))
+        docnames=cur.fetchall()
+        print(docnames)
+        return render_template('patient/book.html', profiledet=res, depttab=depttab, docnames=docnames )
+    if request.method=="POST" and request.form.get("doc_name"):
+        doc_name = request.form.get("doc_name")
+        cur.execute('SELECT DAY, TIME FROM DOC_AVAILABILITY WHERE DOC_NAME = ?', (doc_name,))
+        doctimes=cur.fetchall()
+        cur.execute('SELECT DOC_ID FROM DOCTORS WHERE DOC_NAME=?', (doc_name,))
+        docid=cur.fetchone()
+        session['selected_docid'] = docid[0]
+        session['selected_doct'] = doc_name
+        return render_template('patient/book.html', profiledet=res, depttab=depttab, doctimes=doctimes )
+    if request.method=="POST" and request.form.get("doc_time"):
+        doc_time = request.form.get("doc_time")
+        day, time = doc_time.split(",")
+        selected_day+=day
+        selected_time+=time
+        selected_docid = session.get('selected_docid')
+        selected_doct = session.get('selected_doct')
+        cur.execute('''INSERT INTO APPOINTMENTS (PATIENT_ID, PATIENT_NAME, DOC_ID, DOC_NAME, APPOINTMENT_DATE, APPOINTMENT_TIME, STATUS)
+                    VALUES(?,?,?,?,?,?,?)''',
+                    (pid,pname,selected_docid,selected_doct,selected_day,selected_time,"Booked"))
+        con.commit()
+    con.close()
+    return render_template('patient/book.html', profiledet=res, depttab=depttab)
+
+@app.route('/canceleapp/<int:app_id>', methods=['POST'])
+def cancelapp(app_id):
+    uname=session.get('username')
+    con = sqlite3.connect(database)
+    cur = con.cursor()
+    cur.execute("UPDATE APPOINTMENTS SET STATUS='Cancelled' WHERE APPOINTMENT_ID=?",(app_id,))
+    con.commit()
+    con.close()
+    if uname=='Admin':
+        return redirect(url_for('admin_dashboard'))
+    else:
+        return redirect(url_for('doctor_dashboard'))
+
+@app.route('/updatepatprofile', methods=['POST','GET'])
+def updatepatprofile():
+    uname = session.get('username')
+    con = sqlite3.connect(database)
+    cur = con.cursor()
+    cur.execute('SELECT * FROM PATIENTS WHERE PATIENT_NAME LIKE ?', (f"%{uname}%",))
+    res = cur.fetchone()
+    con.close()
+    return render_template('patient/profile.html', profiledet=res)
+
+
+@app.route('/editpatprofile/<int:patient_id>', methods=['POST','GET'])
+def editpatprofile(patient_id):
+    con = sqlite3.connect(database)
+    cur = con.cursor()
+    cur.execute("SELECT * FROM PATIENTS WHERE PATIENT_ID=?", (patient_id,))
+    patient = cur.fetchone()
+    if request.method == 'POST':
+        parameter = []
+        values = []
+
+        patient_name = request.form.get('patient_name')
+        if patient_name:
+            parameter.append("PATIENT_NAME=?")
+            values.append(patient_name)
+
+        age = request.form.get('age')
+        if age:
+            parameter.append("AGE=?")
+            values.append(age)
+
+        gender = request.form.get('gender')
+        if gender:
+            parameter.append("GENDER=?")
+            values.append(gender)
+
+        address = request.form.get('address')
+        if address:
+            parameter.append("ADDRESS=?")
+            values.append(address)
+
+        contact = request.form.get('contact')
+        if contact:
+            parameter.append("CONTACT=?")
+            values.append(contact)
+
+        blood = request.form.get('blood')
+        if blood:
+            parameter.append("BLOOD_GRP=?")
+            values.append(blood)
+
+        allergies = request.form.get('allergies')
+        if allergies:
+            parameter.append("ALLERGIES=?")
+            values.append(allergies)
+
+        values.append(patient_id)
+
+        if parameter:
+            q = f"UPDATE PATIENTS SET {','.join(parameter)} WHERE PATIENT_ID=?"
+            cur.execute(q, values)
+            con.commit()
+
+        con.close()
+        return redirect(url_for('updatepatprofile'))
+    con.close()
+    return render_template('patient/editprofile.html', patient=patient)
+
+@app.route('/treatment', methods=['GET', 'POST'])
+def treatment():
+    if request.method == 'POST':
+        appointment_id= request.form.get('appointment_id')
+        patient_name = request.form.get('patient_name')
+        docname = session.get('username')
+        diagnosis = request.form.get('diagnosis')
+        treatment = request.form.get('treatment')
+        presc = request.form.get('presc')
+
+        if not diagnosis:
+            return render_template('doctor/treatment.html', patient_name=patient_name, appointment_id=appointment_id)
+
+        con = sqlite3.connect(database)
+        cur = con.cursor()
+        cur.execute('''INSERT INTO TREATMENTS (PATIENT_NAME, DOC_NAME, DIAGNOSIS, TREATMENT, PRESCRIPTION)
+                    VALUES(?,?,?,?,?)''',
+                    (patient_name,docname,diagnosis,treatment,presc))
+        con.commit()
+        cur.execute("UPDATE APPOINTMENTS SET STATUS='Completed' WHERE APPOINTMENT_ID=?",(appointment_id,))
+        con.commit()
+        con.close()
+        return redirect(url_for('doctor_dashboard'))
+
+@app.route('/history', methods=['GET'])
+def history():
+    uname = session.get('username')
+    print("UNAME IS",uname)
+    con = sqlite3.connect(database)
+    cur = con.cursor()
+    cur.execute('SELECT TREATMENT_ID, DOC_NAME, DIAGNOSIS, TREATMENT, PRESCRIPTION FROM TREATMENTS WHERE PATIENT_NAME LIKE ?',(f"%{uname}%",))
+    his=cur.fetchall()
+    print("HIS VALUE IS",his)
+    return render_template('patient/history.html', his=his)
 
 if __name__ == "__main__":
     app.run(debug=True)
