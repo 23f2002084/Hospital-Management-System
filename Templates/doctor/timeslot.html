@@ -6,7 +6,7 @@
     <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-    <title>Doctor-Dashboard</title>
+    <title>Doctor-Availability</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/admindash.css') }}">
     <style>
         .timeslot{
@@ -29,14 +29,6 @@
             <div class="icon">
                 <img src="{{ url_for('static',filename='icons/home.svg')}}" alt="">
                 <a href="/doctor_dashboard">Home</a>
-            </div>
-            <div class="icon">
-                <img src="{{ url_for('static',filename='icons/patient.svg')}}" alt="">
-                <a href="">Patients</a>
-            </div>
-            <div class="icon">
-                <img src="{{ url_for('static',filename='icons/app.svg')}}" alt="">
-                <a href="">Appointments</a>
             </div>
             <div class="icon">
                 <img src="{{ url_for('static',filename='icons/avail.svg')}}" alt="">

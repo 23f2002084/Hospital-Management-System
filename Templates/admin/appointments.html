@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin-Patients</title>
+    <title>Admin-Appointments</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/admindash.css') }}">
 </head>
 <body>
@@ -30,7 +30,7 @@
             </div>
     </div>
     <section class="main">
-        <div class="view" style="height: 96vh;">
+        <div class="view" style="height: auto;">
             <div class="appointments">
                 <h1 id="hmm">Appointments List</h1>
                 <form class="searchbar" method="get" action="{{ url_for('appointment_list') }}">

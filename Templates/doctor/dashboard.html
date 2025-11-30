@@ -13,10 +13,6 @@
                 <a href="">Home</a>
             </div>
             <div class="icon">
-                <img src="{{ url_for('static',filename='icons/patient.svg')}}" alt="">
-                <a href="">Patients</a>
-            </div>
-            <div class="icon">
                 <img src="{{ url_for('static',filename='icons/avail.svg')}}" alt="">
                 <a href="/timeslot">Availability</a>
             </div>
@@ -91,16 +87,16 @@
                         <h1>Actions</h1>
                     </div>
                 </div>
-                {% for i in tab%}
+                {% for i in dist%}
                 <div class="title">
                     <div class="patient" style="display: flex; align-items: center; justify-content: center;">
-                        <h1>{{i[1]}}</h1>
+                        <h1>{{i}}</h1>
                     </div>
                     <div class="patient" style="text-align: center; display: flex; align-items: center; justify-content: center;">
-                        <button popovertarget="mypopover">History</button>
-                        <div id="mypopover" popover style="width: 500px; height: auto; border: none;">
-                            <h1 style="color: black;">{{i[1]}}'s History</h1>
-                        </div>
+                        <form method="GET" action="{{ url_for('patient_history') }}">
+                            <input type="hidden" name="pname" value="{{ i }}">
+                            <button type="submit">History</button>
+                        </form>
                     </div>
                 </div>
                 {% endfor %}

@@ -3,37 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Patient-History</title>
+    <title>Doctor-Dashboard</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/admindash.css') }}">
 </head>
 <body>
     <div class="navbar">
             <div class="icon">
                 <img src="{{ url_for('static',filename='icons/home.svg')}}" alt="">
-                <a href="/patient_dashboard">Home</a>
+                <a href="/doctor_dashboard">Home</a>
             </div>
             <div class="icon">
-                <img src="{{ url_for('static',filename='icons/doc.svg')}}" alt="">
-                <a href="/doctor_list">Doctors</a>
-            </div>
-            <div class="icon">
-                <img src="{{ url_for('static',filename='icons/app.svg')}}" alt="">
-                <a href="/bookappointment">Appointments</a>
-            </div>
-            <div class="icon">
-                <img src="{{ url_for('static',filename='icons/history.svg')}}" alt="">
-                <a href="/history">History</a>
-            </div>
-            <div class="icon">
-                <img src="{{ url_for('static',filename='icons/profile.svg')}}" alt="">
-                <a href="/updatepatprofile">Profile</a>
+                <img src="{{ url_for('static',filename='icons/avail.svg')}}" alt="">
+                <a href="/timeslot">Availability</a>
             </div>
             <div class="icon">
                 <img src="{{ url_for('static',filename='icons/logout.svg')}}" alt="">
                 <a href="/">Logout</a>
             </div>
-    </div>
-    <section class="main">
+        </div>
+        <section class="main">
         <div class="view" style="min-height: 92vh;">
             <div class="appointments">
                 <h1 id="hmm">History</h1>

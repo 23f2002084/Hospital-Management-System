@@ -13,6 +13,10 @@
                 <a href="/patient_dashboard">Home</a>
             </div>
             <div class="icon">
+                <img src="{{ url_for('static',filename='icons/doc.svg')}}" alt="">
+                <a href="/doctor_list">Doctors</a>
+            </div>
+            <div class="icon">
                 <img src="{{ url_for('static',filename='icons/app.svg')}}" alt="">
                 <a href="/bookappointment">Appointments</a>
             </div>
@@ -69,13 +73,6 @@
                 </div>
                 <div class="appointments" style="width: 49.70%; background-color: #101011; margin-top: 0px; margin-bottom: 0px; position: relative;">
                     <h1 style="position: absolute; top: 15px; left: 15px;">Available Doctors</h1>
-                    <form class="searchbar" method="get" action="{{ url_for('doctor_dashboard') }}" style="display:flex; gap:8px; align-items:center;">
-                            <input type="search" name="name" placeholder="Search by name or department" value="{{ search|default('') }}" />
-                            <button type="submit" style="padding:6px 10px;">Search</button>
-                            {% if search %}
-                                <a href="{{ url_for('doctor_dashboard') }}" style="margin-left:8px; text-decoration:none; color:#333;">Clear</a>
-                            {% endif %}
-                    </form>
                     <table style="width: 95%; margin-top: 40px; margin-left: 50px;">
                         {% for i in doctab %}
                         {% set docname = i[0] %}
@@ -122,17 +119,26 @@
                 {% for i in tab%}
                 <div class="title">
                     <div class="app">
-                        <h1>{{i[0]}}</h1>
-                    </div>
-                    <div class="patient">
                         <h1>{{i[1]}}</h1>
                     </div>
                     <div class="patient">
                         <h1>{{i[2]}}</h1>
                     </div>
+                    <div class="patient">
+                        <h1>{{i[3]}}</h1>
+                    </div>
                     <div class="stat" style="display: flex; justify-content: space-evenly; align-items: center; ">
-                        <button style="background-color: rgb(0, 255, 55);">Reschedule</button>
-                        <button style="background-color: rgb(255, 0, 0);">Cancel</button>
+                        <form method="POST" action="{{ url_for('reschedule', app_id=i[0]) }}">
+                            <input type="hidden" name="docname" value="{{ i[1] }}">
+                            <input type="hidden" name="time" value="{{ i[2] }}">
+                            <input type="hidden" name="day" value="{{ i[3] }}">
+                            <button type="submit" style="background-color: rgb(0, 255, 55);">
+                                Reschedule
+                            </button>
+                        </form>
+                        <form action="{{url_for('cancelapp',app_id=i[0])}}" method="post">
+                            <button type="submit" style="background-color: rgb(216, 51, 51);">Cancel</button>
+                        </form>
                     </div>
                 </div>
                 {% endfor %}

@@ -5,12 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Patient-Book Appointment</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/admindash.css') }}">
+    <style>
+        form{
+            margin: 10px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
+            width: 500px;
+            margin-top: 50px;
+        }
+
+        form label{
+            color: white;
+        }
+
+        form select{
+            width: 200px;
+        }
+    </style>
 </head>
 <body>
     <div class="navbar">
             <div class="icon">
                 <img src="{{ url_for('static',filename='icons/home.svg')}}" alt="">
                 <a href="/patient_dashboard">Home</a>
+            </div>
+            <div class="icon">
+                <img src="{{ url_for('static',filename='icons/doc.svg')}}" alt="">
+                <a href="/doctor_list">Doctors</a>
             </div>
             <div class="icon">
                 <img src="{{ url_for('static',filename='icons/app.svg')}}" alt="">

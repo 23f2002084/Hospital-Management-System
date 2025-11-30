@@ -13,6 +13,10 @@
                 <a href="/patient_dashboard">Home</a>
             </div>
             <div class="icon">
+                <img src="{{ url_for('static',filename='icons/doc.svg')}}" alt="">
+                <a href="/doctor_list">Doctors</a>
+            </div>
+            <div class="icon">
                 <img src="{{ url_for('static',filename='icons/app.svg')}}" alt="">
                 <a href="/bookappointment">Appointments</a>
             </div>
@@ -22,7 +26,7 @@
             </div>
             <div class="icon">
                 <img src="{{ url_for('static',filename='icons/profile.svg')}}" alt="">
-                <a href="">Profile</a>
+                <a href="/updatepatprofile">Profile</a>
             </div>
             <div class="icon">
                 <img src="{{ url_for('static',filename='icons/logout.svg')}}" alt="">
