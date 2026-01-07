@@ -2,6 +2,9 @@
 
 **MAD 1 Project**
 
+<img width="1280" height="640" alt="Narendran" src="https://github.com/user-attachments/assets/6fb7645f-0339-4bea-b356-e9bb76368546" />
+
+---
 Project Overview
 
 Hospitals require efficient systems to manage patients, doctors, appointments, and treatments. Many hospitals still rely on manual registers or disconnected software, leading to difficulties in record management, appointment conflicts, and tracking patient history.
